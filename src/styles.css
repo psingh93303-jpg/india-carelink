@@ -161,5 +161,44 @@
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
+    font-feature-settings: "cv11", "ss01";
   }
+
+  /* Leaflet must sit below shadcn overlays (dialog/sheet use z-50) */
+  .leaflet-pane,
+  .leaflet-top,
+  .leaflet-bottom {
+    z-index: 1 !important;
+  }
+  .leaflet-container {
+    z-index: 0;
+    border-radius: var(--radius);
+  }
+}
+
+@utility bg-gradient-hero {
+  background-image: var(--gradient-hero);
+}
+@utility bg-gradient-emergency {
+  background-image: var(--gradient-emergency);
+}
+@utility bg-gradient-soft {
+  background-image: var(--gradient-soft);
+}
+@utility shadow-soft {
+  box-shadow: var(--shadow-soft);
+}
+@utility shadow-elegant {
+  box-shadow: var(--shadow-elegant);
+}
+@utility shadow-emergency {
+  box-shadow: var(--shadow-emergency);
+}
+
+@keyframes pulse-emergency {
+  0%, 100% { box-shadow: 0 0 0 0 oklch(0.6 0.24 25 / 0.5); }
+  50% { box-shadow: 0 0 0 16px oklch(0.6 0.24 25 / 0); }
+}
+@utility animate-pulse-emergency {
+  animation: pulse-emergency 2s ease-in-out infinite;
 }
