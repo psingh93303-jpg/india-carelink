@@ -39,8 +39,8 @@ function SearchPage() {
   const search = Route.useSearch();
   const navigate = Route.useNavigate();
 
-  const update = (patch: Partial<typeof search>) =>
-    navigate({ search: (prev) => ({ ...prev, ...patch }) });
+  const update = (patch: Record<string, unknown>) =>
+    navigate({ search: (prev: Record<string, unknown>) => ({ ...prev, ...patch }) as never });
 
   const results = useMemo(() => {
     const q = search.q.trim().toLowerCase();

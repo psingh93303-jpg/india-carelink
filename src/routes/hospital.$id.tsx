@@ -106,7 +106,7 @@ function HospitalPage() {
             <div className="rounded-2xl border border-border bg-card p-6 shadow-soft">
               <h2 className="font-semibold text-lg flex items-center gap-2"><Stethoscope className="h-5 w-5 text-primary" /> {t("services")}</h2>
               <div className="mt-3 flex flex-wrap gap-2">
-                {hospital.specialties.map((s) => (
+                {hospital.specialties.map((s: string) => (
                   <span key={s} className="rounded-lg bg-accent px-3 py-1.5 text-sm text-accent-foreground">{s}</span>
                 ))}
               </div>
