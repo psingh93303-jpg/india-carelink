@@ -1,6 +1,7 @@
 @import "tailwindcss" source(none);
 @source "../src";
 @import "tw-animate-css";
+@import "leaflet/dist/leaflet.css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -46,6 +47,12 @@
   --color-input: var(--input);
   --color-ring: var(--ring);
   --color-ring-offset-background: var(--background);
+  --color-emergency: var(--emergency);
+  --color-emergency-foreground: var(--emergency-foreground);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
   --color-chart-1: var(--chart-1);
   --color-chart-2: var(--chart-2);
   --color-chart-3: var(--chart-3);
@@ -62,26 +69,40 @@
 }
 
 :root {
-  --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.129 0.042 264.695);
+  --radius: 0.875rem;
+  --background: oklch(0.99 0.005 220);
+  --foreground: oklch(0.18 0.04 230);
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.129 0.042 264.695);
+  --card-foreground: oklch(0.18 0.04 230);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.129 0.042 264.695);
-  --primary: oklch(0.208 0.042 265.755);
-  --primary-foreground: oklch(0.984 0.003 247.858);
-  --secondary: oklch(0.968 0.007 247.896);
-  --secondary-foreground: oklch(0.208 0.042 265.755);
-  --muted: oklch(0.968 0.007 247.896);
-  --muted-foreground: oklch(0.554 0.046 257.417);
-  --accent: oklch(0.968 0.007 247.896);
-  --accent-foreground: oklch(0.208 0.042 265.755);
-  --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.984 0.003 247.858);
-  --border: oklch(0.929 0.013 255.508);
-  --input: oklch(0.929 0.013 255.508);
-  --ring: oklch(0.704 0.04 256.788);
+  --popover-foreground: oklch(0.18 0.04 230);
+  --primary: oklch(0.55 0.18 165);
+  --primary-foreground: oklch(0.99 0.005 220);
+  --primary-glow: oklch(0.7 0.17 165);
+  --secondary: oklch(0.96 0.02 220);
+  --secondary-foreground: oklch(0.25 0.05 230);
+  --muted: oklch(0.96 0.015 220);
+  --muted-foreground: oklch(0.5 0.03 230);
+  --accent: oklch(0.94 0.05 200);
+  --accent-foreground: oklch(0.25 0.08 230);
+  --emergency: oklch(0.6 0.24 25);
+  --emergency-foreground: oklch(0.99 0 0);
+  --emergency-glow: oklch(0.72 0.22 25);
+  --success: oklch(0.65 0.16 155);
+  --success-foreground: oklch(0.99 0 0);
+  --warning: oklch(0.78 0.16 75);
+  --warning-foreground: oklch(0.2 0.05 75);
+  --destructive: oklch(0.6 0.24 25);
+  --destructive-foreground: oklch(0.99 0 0);
+  --border: oklch(0.9 0.015 220);
+  --input: oklch(0.9 0.015 220);
+  --ring: oklch(0.55 0.18 165);
+  --gradient-hero: linear-gradient(135deg, oklch(0.55 0.18 165), oklch(0.62 0.15 195));
+  --gradient-emergency: linear-gradient(135deg, oklch(0.6 0.24 25), oklch(0.68 0.2 35));
+  --gradient-soft: linear-gradient(180deg, oklch(0.99 0.01 195) 0%, oklch(0.96 0.03 195) 100%);
+  --shadow-soft: 0 2px 8px -2px oklch(0.55 0.18 165 / 0.08), 0 4px 16px -4px oklch(0.18 0.04 230 / 0.06);
+  --shadow-elegant: 0 10px 30px -10px oklch(0.55 0.18 165 / 0.25);
+  --shadow-emergency: 0 8px 24px -8px oklch(0.6 0.24 25 / 0.4);
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
@@ -140,5 +161,44 @@
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
+    font-feature-settings: "cv11", "ss01";
   }
+
+  /* Leaflet must sit below shadcn overlays (dialog/sheet use z-50) */
+  .leaflet-pane,
+  .leaflet-top,
+  .leaflet-bottom {
+    z-index: 1 !important;
+  }
+  .leaflet-container {
+    z-index: 0;
+    border-radius: var(--radius);
+  }
+}
+
+@utility bg-gradient-hero {
+  background-image: var(--gradient-hero);
+}
+@utility bg-gradient-emergency {
+  background-image: var(--gradient-emergency);
+}
+@utility bg-gradient-soft {
+  background-image: var(--gradient-soft);
+}
+@utility shadow-soft {
+  box-shadow: var(--shadow-soft);
+}
+@utility shadow-elegant {
+  box-shadow: var(--shadow-elegant);
+}
+@utility shadow-emergency {
+  box-shadow: var(--shadow-emergency);
+}
+
+@keyframes pulse-emergency {
+  0%, 100% { box-shadow: 0 0 0 0 oklch(0.6 0.24 25 / 0.5); }
+  50% { box-shadow: 0 0 0 16px oklch(0.6 0.24 25 / 0); }
+}
+@utility animate-pulse-emergency {
+  animation: pulse-emergency 2s ease-in-out infinite;
 }
