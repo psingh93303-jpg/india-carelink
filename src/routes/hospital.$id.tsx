@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { useI18n } from "@/lib/i18n";
 import { fetchHospitalById } from "@/lib/hospitals-api";
 import { MapView } from "@/components/MapView";
+import { HospitalReviews } from "@/components/HospitalReviews";
 
 export const Route = createFileRoute("/hospital/$id")({
   loader: async ({ params }) => {
@@ -111,6 +112,8 @@ function HospitalPage() {
                 ))}
               </div>
             </div>
+
+            <HospitalReviews hospitalId={hospital.id} />
           </div>
 
           <div className="space-y-6">
