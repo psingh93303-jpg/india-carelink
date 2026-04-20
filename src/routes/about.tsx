@@ -5,9 +5,9 @@ import { Button } from "@/components/ui/button";
 export const Route = createFileRoute("/about")({
   head: () => ({
     meta: [
-      { title: "About — MediFinder UP" },
-      { name: "description", content: "MediFinder UP helps you find hospitals and emergency care across Uttar Pradesh, fast and reliably." },
-      { property: "og:title", content: "About MediFinder UP" },
+      { title: "About — MediFinder" },
+      { name: "description", content: "MediFinder helps you find hospitals and emergency care across Uttar Pradesh, fast and reliably." },
+      { property: "og:title", content: "About MediFinder" },
       { property: "og:description", content: "Helping Uttar Pradesh find the right hospital, fast." },
     ],
   }),
@@ -23,9 +23,9 @@ function About() {
   ];
   return (
     <div className="container mx-auto px-4 py-16 max-w-4xl">
-      <h1 className="text-4xl md:text-5xl font-bold tracking-tight">About MediFinder UP</h1>
+      <h1 className="text-4xl md:text-5xl font-bold tracking-tight">About MediFinder</h1>
       <p className="mt-4 text-lg text-muted-foreground">
-        MediFinder UP is a healthcare discovery platform designed for Uttar Pradesh. Our mission is to help patients
+        MediFinder is a healthcare discovery platform designed for Uttar Pradesh. Our mission is to help patients
         and families find the right hospital, clinic or emergency service — quickly, reliably and in the language they speak.
       </p>
 

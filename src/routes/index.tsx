@@ -10,7 +10,7 @@ import { HospitalCard } from "@/components/HospitalCard";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "MediFinder UP — Find hospitals & emergency care in Uttar Pradesh" },
+      { title: "MediFinder — Find hospitals & emergency care in Uttar Pradesh" },
       { name: "description", content: "Smart hospital search across Uttar Pradesh. Filter by city, specialty, ICU, ambulance & 24/7 emergency." },
     ],
   }),

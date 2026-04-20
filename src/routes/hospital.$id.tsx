@@ -15,7 +15,7 @@ export const Route = createFileRoute("/hospital/$id")({
   head: ({ loaderData }) => ({
     meta: loaderData
       ? [
-          { title: `${loaderData.hospital.name}, ${loaderData.hospital.city} — MediFinder UP` },
+          { title: `${loaderData.hospital.name}, ${loaderData.hospital.city} — MediFinder` },
           { name: "description", content: loaderData.hospital.about },
           { property: "og:title", content: `${loaderData.hospital.name} — ${loaderData.hospital.city}` },
           { property: "og:description", content: loaderData.hospital.about },

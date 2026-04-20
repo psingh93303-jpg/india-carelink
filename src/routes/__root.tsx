@@ -32,10 +32,10 @@ export const Route = createRootRoute({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "MediFinder UP — Find hospitals & emergency care in Uttar Pradesh" },
+      { title: "MediFinder — Find hospitals & emergency care in Uttar Pradesh" },
       { name: "description", content: "Search hospitals, clinics & emergency services across Uttar Pradesh by city, specialty, ICU, ambulance and 24/7 availability." },
-      { name: "author", content: "MediFinder UP" },
-      { property: "og:title", content: "MediFinder UP — Hospitals across Uttar Pradesh" },
+      { name: "author", content: "MediFinder" },
+      { property: "og:title", content: "MediFinder — Hospitals across Uttar Pradesh" },
       { property: "og:description", content: "Find the right hospital, fast. Smart search, emergency mode and verified profiles." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },

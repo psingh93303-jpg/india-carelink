@@ -10,9 +10,9 @@ import { MapView } from "@/components/MapView";
 export const Route = createFileRoute("/emergency")({
   head: () => ({
     meta: [
-      { title: "Emergency Mode — Nearest hospitals · MediFinder UP" },
+      { title: "Emergency Mode — Nearest hospitals · MediFinder" },
       { name: "description", content: "Find the nearest hospital with emergency, ICU and ambulance services in Uttar Pradesh." },
-      { property: "og:title", content: "Emergency Mode — MediFinder UP" },
+      { property: "og:title", content: "Emergency Mode — MediFinder" },
       { property: "og:description", content: "One-tap nearest emergency hospital finder for Uttar Pradesh." },
     ],
   }),
