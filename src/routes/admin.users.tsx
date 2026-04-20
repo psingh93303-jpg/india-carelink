@@ -8,7 +8,7 @@ import { useAuth } from "@/lib/auth";
 
 export const Route = createFileRoute("/admin/users")({
   head: () => ({ meta: [{ title: "Users — Admin · MediFinder" }] }),
-  component: AdminUsers;
+  component: AdminUsers,
 });
 
 type UserRow = {
