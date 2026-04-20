@@ -4,8 +4,9 @@ import { useState, type FormEvent } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useI18n } from "@/lib/i18n";
-import { CITIES, HOSPITALS, SPECIALTIES } from "@/data/hospitals";
+import { CITIES, SPECIALTIES } from "@/data/hospitals";
 import { HospitalCard } from "@/components/HospitalCard";
+import { useHospitals } from "@/hooks/useHospitals";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -30,6 +31,7 @@ function Index() {
   const { t } = useI18n();
   const navigate = useNavigate();
   const [q, setQ] = useState("");
+  const { hospitals: HOSPITALS } = useHospitals();
 
   const featured = HOSPITALS.filter((h) => h.featured).slice(0, 6);
   const topCities = CITIES.slice(0, 8);

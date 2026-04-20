@@ -1,13 +1,16 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Activity, Menu, Globe, Siren } from "lucide-react";
+import { Activity, Menu, Globe, Siren, LogIn, LogOut, Shield, User as UserIcon } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useI18n } from "@/lib/i18n";
+import { useAuth } from "@/lib/auth";
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 
 export function Header() {
   const { t, lang, setLang } = useI18n();
+  const { user, isAdmin, signOut } = useAuth();
   const { location } = useRouterState();
   const [open, setOpen] = useState(false);
 
@@ -61,6 +64,32 @@ export function Header() {
               {t("nav_emergency")}
             </Link>
           </Button>
+
+          {user ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon" aria-label="Account">
+                  <UserIcon className="h-5 w-5" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56">
+                <div className="px-2 py-1.5 text-xs text-muted-foreground truncate">{user.email}</div>
+                <DropdownMenuSeparator />
+                {isAdmin && (
+                  <DropdownMenuItem asChild>
+                    <Link to="/admin"><Shield className="h-4 w-4" /> Admin portal</Link>
+                  </DropdownMenuItem>
+                )}
+                <DropdownMenuItem onClick={() => signOut()}>
+                  <LogOut className="h-4 w-4" /> Sign out
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <Button asChild variant="ghost" size="sm" className="hidden sm:inline-flex">
+              <Link to="/auth"><LogIn className="h-4 w-4" /> Sign in</Link>
+            </Button>
+          )}
 
           <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
