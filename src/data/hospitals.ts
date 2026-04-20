@@ -37,6 +37,7 @@ export type Hospital = {
 export const CITIES = [
   "Lucknow",
   "Kanpur",
+  "Unnao",
   "Varanasi",
   "Agra",
   "Prayagraj",
