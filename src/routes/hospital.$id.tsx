@@ -3,12 +3,12 @@ import { ArrowLeft, MapPin, Phone, Star, Siren, Clock, Ambulance, HeartPulse, Ex
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useI18n } from "@/lib/i18n";
-import { getHospitalById } from "@/data/hospitals";
+import { fetchHospitalById } from "@/lib/hospitals-api";
 import { MapView } from "@/components/MapView";
 
 export const Route = createFileRoute("/hospital/$id")({
-  loader: ({ params }) => {
-    const hospital = getHospitalById(params.id);
+  loader: async ({ params }) => {
+    const hospital = await fetchHospitalById(params.id);
     if (!hospital) throw notFound();
     return { hospital };
   },

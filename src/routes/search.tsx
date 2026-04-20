@@ -9,8 +9,9 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useI18n } from "@/lib/i18n";
-import { CITIES, HOSPITALS, SPECIALTIES, type Specialty } from "@/data/hospitals";
+import { CITIES, SPECIALTIES, type Specialty } from "@/data/hospitals";
 import { HospitalCard } from "@/components/HospitalCard";
+import { useHospitals } from "@/hooks/useHospitals";
 
 const searchSchema = z.object({
   q: fallback(z.string(), "").default(""),
@@ -38,6 +39,7 @@ function SearchPage() {
   const { t } = useI18n();
   const search = Route.useSearch();
   const navigate = Route.useNavigate();
+  const { hospitals: HOSPITALS } = useHospitals();
 
   const update = (patch: Record<string, unknown>) =>
     navigate({ search: (prev: Record<string, unknown>) => ({ ...prev, ...patch }) as never });
@@ -55,7 +57,7 @@ function SearchPage() {
       if (search.minRating > 0 && h.rating < search.minRating) return false;
       return true;
     }).sort((a, b) => Number(b.featured ?? false) - Number(a.featured ?? false) || b.rating - a.rating);
-  }, [search]);
+  }, [search, HOSPITALS]);
 
   const activeFiltersCount = [
     search.city, search.specialty, search.emergency, search.icu, search.ambulance, search.open24_7, search.minRating > 0,

@@ -17,6 +17,9 @@ import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as HospitalIdRouteImport } from './routes/hospital.$id'
+import { Route as AdminUsersRouteImport } from './routes/admin.users'
+import { Route as AdminReviewsRouteImport } from './routes/admin.reviews'
+import { Route as AdminHospitalsRouteImport } from './routes/admin.hospitals'
 import { Route as AdminForbiddenRouteImport } from './routes/admin.forbidden'
 
 const SearchRoute = SearchRouteImport.update({
@@ -59,6 +62,21 @@ const HospitalIdRoute = HospitalIdRouteImport.update({
   path: '/hospital/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminUsersRoute = AdminUsersRouteImport.update({
+  id: '/users',
+  path: '/users',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminReviewsRoute = AdminReviewsRouteImport.update({
+  id: '/reviews',
+  path: '/reviews',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminHospitalsRoute = AdminHospitalsRouteImport.update({
+  id: '/hospitals',
+  path: '/hospitals',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminForbiddenRoute = AdminForbiddenRouteImport.update({
   id: '/forbidden',
   path: '/forbidden',
@@ -73,6 +91,9 @@ export interface FileRoutesByFullPath {
   '/emergency': typeof EmergencyRoute
   '/search': typeof SearchRoute
   '/admin/forbidden': typeof AdminForbiddenRoute
+  '/admin/hospitals': typeof AdminHospitalsRoute
+  '/admin/reviews': typeof AdminReviewsRoute
+  '/admin/users': typeof AdminUsersRoute
   '/hospital/$id': typeof HospitalIdRoute
   '/admin/': typeof AdminIndexRoute
 }
@@ -83,6 +104,9 @@ export interface FileRoutesByTo {
   '/emergency': typeof EmergencyRoute
   '/search': typeof SearchRoute
   '/admin/forbidden': typeof AdminForbiddenRoute
+  '/admin/hospitals': typeof AdminHospitalsRoute
+  '/admin/reviews': typeof AdminReviewsRoute
+  '/admin/users': typeof AdminUsersRoute
   '/hospital/$id': typeof HospitalIdRoute
   '/admin': typeof AdminIndexRoute
 }
@@ -95,6 +119,9 @@ export interface FileRoutesById {
   '/emergency': typeof EmergencyRoute
   '/search': typeof SearchRoute
   '/admin/forbidden': typeof AdminForbiddenRoute
+  '/admin/hospitals': typeof AdminHospitalsRoute
+  '/admin/reviews': typeof AdminReviewsRoute
+  '/admin/users': typeof AdminUsersRoute
   '/hospital/$id': typeof HospitalIdRoute
   '/admin/': typeof AdminIndexRoute
 }
@@ -108,6 +135,9 @@ export interface FileRouteTypes {
     | '/emergency'
     | '/search'
     | '/admin/forbidden'
+    | '/admin/hospitals'
+    | '/admin/reviews'
+    | '/admin/users'
     | '/hospital/$id'
     | '/admin/'
   fileRoutesByTo: FileRoutesByTo
@@ -118,6 +148,9 @@ export interface FileRouteTypes {
     | '/emergency'
     | '/search'
     | '/admin/forbidden'
+    | '/admin/hospitals'
+    | '/admin/reviews'
+    | '/admin/users'
     | '/hospital/$id'
     | '/admin'
   id:
@@ -129,6 +162,9 @@ export interface FileRouteTypes {
     | '/emergency'
     | '/search'
     | '/admin/forbidden'
+    | '/admin/hospitals'
+    | '/admin/reviews'
+    | '/admin/users'
     | '/hospital/$id'
     | '/admin/'
   fileRoutesById: FileRoutesById
@@ -201,6 +237,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HospitalIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/users': {
+      id: '/admin/users'
+      path: '/users'
+      fullPath: '/admin/users'
+      preLoaderRoute: typeof AdminUsersRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/reviews': {
+      id: '/admin/reviews'
+      path: '/reviews'
+      fullPath: '/admin/reviews'
+      preLoaderRoute: typeof AdminReviewsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/hospitals': {
+      id: '/admin/hospitals'
+      path: '/hospitals'
+      fullPath: '/admin/hospitals'
+      preLoaderRoute: typeof AdminHospitalsRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/forbidden': {
       id: '/admin/forbidden'
       path: '/forbidden'
@@ -213,11 +270,17 @@ declare module '@tanstack/react-router' {
 
 interface AdminRouteChildren {
   AdminForbiddenRoute: typeof AdminForbiddenRoute
+  AdminHospitalsRoute: typeof AdminHospitalsRoute
+  AdminReviewsRoute: typeof AdminReviewsRoute
+  AdminUsersRoute: typeof AdminUsersRoute
   AdminIndexRoute: typeof AdminIndexRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
   AdminForbiddenRoute: AdminForbiddenRoute,
+  AdminHospitalsRoute: AdminHospitalsRoute,
+  AdminReviewsRoute: AdminReviewsRoute,
+  AdminUsersRoute: AdminUsersRoute,
   AdminIndexRoute: AdminIndexRoute,
 }
 

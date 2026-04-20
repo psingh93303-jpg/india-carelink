@@ -3,9 +3,10 @@ import { Siren, MapPin, Phone, Loader2, AlertCircle } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useI18n } from "@/lib/i18n";
-import { HOSPITALS, distanceKm } from "@/data/hospitals";
+import { distanceKm } from "@/data/hospitals";
 import { HospitalCard } from "@/components/HospitalCard";
 import { MapView } from "@/components/MapView";
+import { useHospitals } from "@/hooks/useHospitals";
 
 export const Route = createFileRoute("/emergency")({
   head: () => ({
@@ -21,6 +22,7 @@ export const Route = createFileRoute("/emergency")({
 
 function EmergencyPage() {
   const { t } = useI18n();
+  const { hospitals: HOSPITALS } = useHospitals();
   const [loc, setLoc] = useState<{ lat: number; lng: number } | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
