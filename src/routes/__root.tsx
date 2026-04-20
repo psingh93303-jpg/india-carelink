@@ -37,11 +37,15 @@ export const Route = createRootRoute({
       { title: "MediFinder — Find hospitals & emergency care in Uttar Pradesh" },
       { name: "description", content: "Search hospitals, clinics & emergency services across Uttar Pradesh by city, specialty, ICU, ambulance and 24/7 availability." },
       { name: "author", content: "MediFinder" },
-      { property: "og:title", content: "MediFinder — Hospitals across Uttar Pradesh" },
-      { property: "og:description", content: "Find the right hospital, fast. Smart search, emergency mode and verified profiles." },
+      { property: "og:title", content: "MediFinder — Find hospitals & emergency care in Uttar Pradesh" },
+      { property: "og:description", content: "Search hospitals, clinics & emergency services across Uttar Pradesh by city, specialty, ICU, ambulance and 24/7 availability." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: "MediFinder — Find hospitals & emergency care in Uttar Pradesh" },
+      { name: "twitter:description", content: "Search hospitals, clinics & emergency services across Uttar Pradesh by city, specialty, ICU, ambulance and 24/7 availability." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/3803729f-0857-4b96-932c-ba4150fdc6ce/id-preview-7d5bdbf1--4b9eac5d-bd30-4d72-b0f2-d9723a51fcad.lovable.app-1776684651668.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/3803729f-0857-4b96-932c-ba4150fdc6ce/id-preview-7d5bdbf1--4b9eac5d-bd30-4d72-b0f2-d9723a51fcad.lovable.app-1776684651668.png" },
     ],
     links: [
       {
