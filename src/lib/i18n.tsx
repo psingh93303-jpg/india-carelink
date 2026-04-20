@@ -4,7 +4,7 @@ export type Lang = "en" | "hi";
 
 const dict = {
   en: {
-    brand: "MediFinder UP",
+    brand: "MediFinder",
     tagline: "Find hospitals & emergency care across Uttar Pradesh — instantly.",
     nav_home: "Home",
     nav_search: "Find Hospitals",
@@ -56,7 +56,7 @@ const dict = {
     go_home: "Go home",
   },
   hi: {
-    brand: "मेडीफाइंडर यूपी",
+    brand: "मेडीफाइंडर",
     tagline: "उत्तर प्रदेश में अस्पताल और आपातकालीन सेवाएँ — तुरंत खोजें।",
     nav_home: "होम",
     nav_search: "अस्पताल खोजें",
