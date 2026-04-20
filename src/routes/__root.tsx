@@ -2,8 +2,10 @@ import { Outlet, Link, createRootRoute, HeadContent, Scripts } from "@tanstack/r
 
 import appCss from "../styles.css?url";
 import { I18nProvider } from "@/lib/i18n";
+import { AuthProvider } from "@/lib/auth";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { Toaster } from "@/components/ui/sonner";
 
 function NotFoundComponent() {
   return (
@@ -69,14 +71,17 @@ function RootShell({ children }: { children: React.ReactNode }) {
 
 function RootComponent() {
   return (
-    <I18nProvider>
-      <div className="flex min-h-screen flex-col bg-background">
-        <Header />
-        <main className="flex-1">
-          <Outlet />
-        </main>
-        <Footer />
-      </div>
-    </I18nProvider>
+    <AuthProvider>
+      <I18nProvider>
+        <div className="flex min-h-screen flex-col bg-background">
+          <Header />
+          <main className="flex-1">
+            <Outlet />
+          </main>
+          <Footer />
+          <Toaster />
+        </div>
+      </I18nProvider>
+    </AuthProvider>
   );
 }
