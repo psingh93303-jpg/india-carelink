@@ -26,7 +26,7 @@ const searchSchema = z.object({
 export const Route = createFileRoute("/search")({
   head: () => ({
     meta: [
-      { title: "Find Hospitals — MediFinder UP" },
+      { title: "Find Hospitals — MediFinder" },
       { name: "description", content: "Search hospitals across Uttar Pradesh by city, specialty, rating & emergency facilities." },
     ],
   }),
