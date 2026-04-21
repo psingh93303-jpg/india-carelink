@@ -4,12 +4,14 @@ export type Lang = "en" | "hi";
 
 const dict = {
   en: {
-    brand: "MediFinder",
-    tagline: "Find hospitals & emergency care across Uttar Pradesh — instantly.",
+    brand: "CareLink India",
+    tagline: "Find Hospital & Emergency care across the India",
     nav_home: "Home",
     nav_search: "Find Hospitals",
     nav_emergency: "Emergency",
     nav_about: "About",
+    nav_contact: "Contact",
+    nav_disclaimer: "Disclaimer",
     hero_search_placeholder: "Search by hospital, city or specialty…",
     hero_cta_search: "Search Hospitals",
     hero_cta_emergency: "Emergency Mode",
@@ -51,17 +53,22 @@ const dict = {
     has_icu: "ICU",
     open_24_7: "24/7",
     back: "Back",
-    footer_note: "Demo data for Uttar Pradesh. Always call 108 for medical emergencies.",
+    footer_note: "Information directory only. Always call 108 for medical emergencies.",
     not_found_title: "Hospital not found",
     go_home: "Go home",
+    testing_notice: "This website is still in testing phase, hence it is available only in some districts of Uttar Pradesh.",
+    whats_new_title: "What's new",
+    got_it: "Got it",
   },
   hi: {
-    brand: "मेडीफाइंडर",
-    tagline: "उत्तर प्रदेश में अस्पताल और आपातकालीन सेवाएँ — तुरंत खोजें।",
+    brand: "केयरलिंक इंडिया",
+    tagline: "पूरे भारत में अस्पताल और आपातकालीन देखभाल खोजें",
     nav_home: "होम",
     nav_search: "अस्पताल खोजें",
     nav_emergency: "आपातकाल",
     nav_about: "हमारे बारे में",
+    nav_contact: "संपर्क",
+    nav_disclaimer: "अस्वीकरण",
     hero_search_placeholder: "अस्पताल, शहर या विशेषता खोजें…",
     hero_cta_search: "अस्पताल खोजें",
     hero_cta_emergency: "आपातकालीन मोड",
@@ -103,9 +110,12 @@ const dict = {
     has_icu: "आईसीयू",
     open_24_7: "24/7",
     back: "वापस",
-    footer_note: "उत्तर प्रदेश के लिए डेमो डेटा। आपातकाल में 108 पर कॉल करें।",
+    footer_note: "केवल सूचना निर्देशिका। आपातकाल में 108 पर कॉल करें।",
     not_found_title: "अस्पताल नहीं मिला",
     go_home: "होम पर जाएँ",
+    testing_notice: "यह वेबसाइट अभी परीक्षण चरण में है, इसलिए यह केवल उत्तर प्रदेश के कुछ जिलों में ही उपलब्ध है।",
+    whats_new_title: "नया क्या है",
+    got_it: "ठीक है",
   },
 } as const;
 
@@ -118,13 +128,13 @@ export function I18nProvider({ children }: { children: ReactNode }) {
   const [lang, setLangState] = useState<Lang>("en");
 
   useEffect(() => {
-    const stored = (typeof window !== "undefined" && localStorage.getItem("medifinder-lang")) as Lang | null;
+    const stored = (typeof window !== "undefined" && localStorage.getItem("carelink-lang")) as Lang | null;
     if (stored === "en" || stored === "hi") setLangState(stored);
   }, []);
 
   const setLang = (l: Lang) => {
     setLangState(l);
-    if (typeof window !== "undefined") localStorage.setItem("medifinder-lang", l);
+    if (typeof window !== "undefined") localStorage.setItem("carelink-lang", l);
   };
 
   const t = (k: TKey) => dict[lang][k] ?? dict.en[k] ?? k;
