@@ -1,6 +1,6 @@
 import { createFileRoute, Link, Outlet, redirect, useRouterState } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { LayoutDashboard, Building2, MessageSquare, Users, LogOut, Activity, ArrowLeft } from "lucide-react";
+import { LayoutDashboard, Building2, MessageSquare, Users, LogOut, Activity, ArrowLeft, Settings } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { cn } from "@/lib/utils";
@@ -30,6 +30,7 @@ const NAV: { to: string; label: string; icon: typeof LayoutDashboard; exact?: bo
   { to: "/admin/hospitals", label: "Hospitals", icon: Building2 },
   { to: "/admin/reviews", label: "Reviews", icon: MessageSquare },
   { to: "/admin/users", label: "Users", icon: Users },
+  { to: "/admin/site", label: "Site Settings", icon: Settings },
 ];
 
 function AdminLayout() {

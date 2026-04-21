@@ -11,8 +11,8 @@ import { useHospitals } from "@/hooks/useHospitals";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "MediFinder — Find hospitals & emergency care in Uttar Pradesh" },
-      { name: "description", content: "Smart hospital search across Uttar Pradesh. Filter by city, specialty, ICU, ambulance & 24/7 emergency." },
+      { title: "CareLink India — Find Hospital & Emergency care across the India" },
+      { name: "description", content: "Smart hospital search across India. Filter by city, specialty, ICU, ambulance & 24/7 emergency." },
     ],
   }),
   component: Index,
@@ -51,7 +51,7 @@ function Index() {
           <div className="max-w-3xl">
             <span className="inline-flex items-center gap-2 rounded-full border border-border bg-background/70 px-3 py-1 text-xs font-medium text-muted-foreground backdrop-blur">
               <ShieldCheck className="h-3.5 w-3.5 text-primary" />
-              Uttar Pradesh · 30+ verified hospitals
+              CareLink India · Hospitals & emergency care
             </span>
             <h1 className="mt-4 text-4xl md:text-6xl font-bold tracking-tight text-foreground">
               {t("tagline")}

@@ -11,6 +11,8 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SearchRouteImport } from './routes/search'
 import { Route as EmergencyRouteImport } from './routes/emergency'
+import { Route as DisclaimerRouteImport } from './routes/disclaimer'
+import { Route as ContactRouteImport } from './routes/contact'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AboutRouteImport } from './routes/about'
@@ -18,6 +20,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as HospitalIdRouteImport } from './routes/hospital.$id'
 import { Route as AdminUsersRouteImport } from './routes/admin.users'
+import { Route as AdminSiteRouteImport } from './routes/admin.site'
 import { Route as AdminReviewsRouteImport } from './routes/admin.reviews'
 import { Route as AdminHospitalsRouteImport } from './routes/admin.hospitals'
 import { Route as AdminForbiddenRouteImport } from './routes/admin.forbidden'
@@ -30,6 +33,16 @@ const SearchRoute = SearchRouteImport.update({
 const EmergencyRoute = EmergencyRouteImport.update({
   id: '/emergency',
   path: '/emergency',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DisclaimerRoute = DisclaimerRouteImport.update({
+  id: '/disclaimer',
+  path: '/disclaimer',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -67,6 +80,11 @@ const AdminUsersRoute = AdminUsersRouteImport.update({
   path: '/users',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminSiteRoute = AdminSiteRouteImport.update({
+  id: '/site',
+  path: '/site',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminReviewsRoute = AdminReviewsRouteImport.update({
   id: '/reviews',
   path: '/reviews',
@@ -88,11 +106,14 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/admin': typeof AdminRouteWithChildren
   '/auth': typeof AuthRoute
+  '/contact': typeof ContactRoute
+  '/disclaimer': typeof DisclaimerRoute
   '/emergency': typeof EmergencyRoute
   '/search': typeof SearchRoute
   '/admin/forbidden': typeof AdminForbiddenRoute
   '/admin/hospitals': typeof AdminHospitalsRoute
   '/admin/reviews': typeof AdminReviewsRoute
+  '/admin/site': typeof AdminSiteRoute
   '/admin/users': typeof AdminUsersRoute
   '/hospital/$id': typeof HospitalIdRoute
   '/admin/': typeof AdminIndexRoute
@@ -101,11 +122,14 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/auth': typeof AuthRoute
+  '/contact': typeof ContactRoute
+  '/disclaimer': typeof DisclaimerRoute
   '/emergency': typeof EmergencyRoute
   '/search': typeof SearchRoute
   '/admin/forbidden': typeof AdminForbiddenRoute
   '/admin/hospitals': typeof AdminHospitalsRoute
   '/admin/reviews': typeof AdminReviewsRoute
+  '/admin/site': typeof AdminSiteRoute
   '/admin/users': typeof AdminUsersRoute
   '/hospital/$id': typeof HospitalIdRoute
   '/admin': typeof AdminIndexRoute
@@ -116,11 +140,14 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/admin': typeof AdminRouteWithChildren
   '/auth': typeof AuthRoute
+  '/contact': typeof ContactRoute
+  '/disclaimer': typeof DisclaimerRoute
   '/emergency': typeof EmergencyRoute
   '/search': typeof SearchRoute
   '/admin/forbidden': typeof AdminForbiddenRoute
   '/admin/hospitals': typeof AdminHospitalsRoute
   '/admin/reviews': typeof AdminReviewsRoute
+  '/admin/site': typeof AdminSiteRoute
   '/admin/users': typeof AdminUsersRoute
   '/hospital/$id': typeof HospitalIdRoute
   '/admin/': typeof AdminIndexRoute
@@ -132,11 +159,14 @@ export interface FileRouteTypes {
     | '/about'
     | '/admin'
     | '/auth'
+    | '/contact'
+    | '/disclaimer'
     | '/emergency'
     | '/search'
     | '/admin/forbidden'
     | '/admin/hospitals'
     | '/admin/reviews'
+    | '/admin/site'
     | '/admin/users'
     | '/hospital/$id'
     | '/admin/'
@@ -145,11 +175,14 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/auth'
+    | '/contact'
+    | '/disclaimer'
     | '/emergency'
     | '/search'
     | '/admin/forbidden'
     | '/admin/hospitals'
     | '/admin/reviews'
+    | '/admin/site'
     | '/admin/users'
     | '/hospital/$id'
     | '/admin'
@@ -159,11 +192,14 @@ export interface FileRouteTypes {
     | '/about'
     | '/admin'
     | '/auth'
+    | '/contact'
+    | '/disclaimer'
     | '/emergency'
     | '/search'
     | '/admin/forbidden'
     | '/admin/hospitals'
     | '/admin/reviews'
+    | '/admin/site'
     | '/admin/users'
     | '/hospital/$id'
     | '/admin/'
@@ -174,6 +210,8 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   AdminRoute: typeof AdminRouteWithChildren
   AuthRoute: typeof AuthRoute
+  ContactRoute: typeof ContactRoute
+  DisclaimerRoute: typeof DisclaimerRoute
   EmergencyRoute: typeof EmergencyRoute
   SearchRoute: typeof SearchRoute
   HospitalIdRoute: typeof HospitalIdRoute
@@ -193,6 +231,20 @@ declare module '@tanstack/react-router' {
       path: '/emergency'
       fullPath: '/emergency'
       preLoaderRoute: typeof EmergencyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/disclaimer': {
+      id: '/disclaimer'
+      path: '/disclaimer'
+      fullPath: '/disclaimer'
+      preLoaderRoute: typeof DisclaimerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth': {
@@ -244,6 +296,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminUsersRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/site': {
+      id: '/admin/site'
+      path: '/site'
+      fullPath: '/admin/site'
+      preLoaderRoute: typeof AdminSiteRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/reviews': {
       id: '/admin/reviews'
       path: '/reviews'
@@ -272,6 +331,7 @@ interface AdminRouteChildren {
   AdminForbiddenRoute: typeof AdminForbiddenRoute
   AdminHospitalsRoute: typeof AdminHospitalsRoute
   AdminReviewsRoute: typeof AdminReviewsRoute
+  AdminSiteRoute: typeof AdminSiteRoute
   AdminUsersRoute: typeof AdminUsersRoute
   AdminIndexRoute: typeof AdminIndexRoute
 }
@@ -280,6 +340,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminForbiddenRoute: AdminForbiddenRoute,
   AdminHospitalsRoute: AdminHospitalsRoute,
   AdminReviewsRoute: AdminReviewsRoute,
+  AdminSiteRoute: AdminSiteRoute,
   AdminUsersRoute: AdminUsersRoute,
   AdminIndexRoute: AdminIndexRoute,
 }
@@ -291,6 +352,8 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   AdminRoute: AdminRouteWithChildren,
   AuthRoute: AuthRoute,
+  ContactRoute: ContactRoute,
+  DisclaimerRoute: DisclaimerRoute,
   EmergencyRoute: EmergencyRoute,
   SearchRoute: SearchRoute,
   HospitalIdRoute: HospitalIdRoute,

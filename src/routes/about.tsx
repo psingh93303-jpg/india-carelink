@@ -5,10 +5,10 @@ import { Button } from "@/components/ui/button";
 export const Route = createFileRoute("/about")({
   head: () => ({
     meta: [
-      { title: "About — MediFinder" },
-      { name: "description", content: "MediFinder helps you find hospitals and emergency care across Uttar Pradesh, fast and reliably." },
-      { property: "og:title", content: "About MediFinder" },
-      { property: "og:description", content: "Helping Uttar Pradesh find the right hospital, fast." },
+      { title: "About — CareLink India" },
+      { name: "description", content: "CareLink India helps you find hospitals and emergency care across India, fast and reliably." },
+      { property: "og:title", content: "About CareLink India" },
+      { property: "og:description", content: "Helping India find the right hospital, fast." },
     ],
   }),
   component: About,
@@ -18,15 +18,15 @@ function About() {
   const features = [
     { icon: Search, title: "Smart search", desc: "Filter by city, specialty, ICU, ambulance and 24/7 availability." },
     { icon: Siren, title: "Emergency mode", desc: "One-tap to find the nearest hospital with emergency services." },
-    { icon: Globe, title: "Bilingual", desc: "Available in English and हिंदी for everyone in UP." },
+    { icon: Globe, title: "Bilingual", desc: "Available in English and हिंदी for everyone." },
     { icon: ShieldCheck, title: "Verified profiles", desc: "Hospital details, contact and location you can rely on." },
   ];
   return (
     <div className="container mx-auto px-4 py-16 max-w-4xl">
-      <h1 className="text-4xl md:text-5xl font-bold tracking-tight">About MediFinder</h1>
+      <h1 className="text-4xl md:text-5xl font-bold tracking-tight">About CareLink India</h1>
       <p className="mt-4 text-lg text-muted-foreground">
-        MediFinder is a healthcare discovery platform designed for Uttar Pradesh. Our mission is to help patients
-        and families find the right hospital, clinic or emergency service — quickly, reliably and in the language they speak.
+        CareLink India is a healthcare discovery platform built to help patients and families find the right
+        hospital, clinic or emergency service across India — quickly, reliably and in the language they speak.
       </p>
 
       <div className="mt-10 grid sm:grid-cols-2 gap-5">
@@ -47,7 +47,7 @@ function About() {
           <li>User accounts, save favourites and submit ratings</li>
           <li>Verified hospital partner program & featured listings</li>
           <li>Real-time bed & ambulance availability via partner APIs</li>
-          <li>Expansion to all Indian states</li>
+          <li>Doctors, departments and pathology directory</li>
         </ul>
       </div>
 

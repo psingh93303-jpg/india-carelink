@@ -154,6 +154,72 @@ export type Database = {
           },
         ]
       }
+      site_settings: {
+        Row: {
+          brand_name: string
+          brand_name_hi: string
+          contact_address: string
+          contact_email: string
+          contact_intro_en: string
+          contact_intro_hi: string
+          contact_phone: string
+          created_at: string
+          current_version: string
+          disclaimer_en: string
+          disclaimer_hi: string
+          footer_links: Json
+          id: string
+          social_links: Json
+          tagline_en: string
+          tagline_hi: string
+          updated_at: string
+          whats_new_en: string
+          whats_new_hi: string
+        }
+        Insert: {
+          brand_name?: string
+          brand_name_hi?: string
+          contact_address?: string
+          contact_email?: string
+          contact_intro_en?: string
+          contact_intro_hi?: string
+          contact_phone?: string
+          created_at?: string
+          current_version?: string
+          disclaimer_en?: string
+          disclaimer_hi?: string
+          footer_links?: Json
+          id?: string
+          social_links?: Json
+          tagline_en?: string
+          tagline_hi?: string
+          updated_at?: string
+          whats_new_en?: string
+          whats_new_hi?: string
+        }
+        Update: {
+          brand_name?: string
+          brand_name_hi?: string
+          contact_address?: string
+          contact_email?: string
+          contact_intro_en?: string
+          contact_intro_hi?: string
+          contact_phone?: string
+          created_at?: string
+          current_version?: string
+          disclaimer_en?: string
+          disclaimer_hi?: string
+          footer_links?: Json
+          id?: string
+          social_links?: Json
+          tagline_en?: string
+          tagline_hi?: string
+          updated_at?: string
+          whats_new_en?: string
+          whats_new_hi?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -172,6 +238,33 @@ export type Database = {
           id?: string
           role?: Database["public"]["Enums"]["app_role"]
           user_id?: string
+        }
+        Relationships: []
+      }
+      version_history: {
+        Row: {
+          created_at: string
+          id: string
+          notes_en: string
+          notes_hi: string
+          released_at: string
+          version: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          notes_en?: string
+          notes_hi?: string
+          released_at?: string
+          version: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          notes_en?: string
+          notes_hi?: string
+          released_at?: string
+          version?: string
         }
         Relationships: []
       }
