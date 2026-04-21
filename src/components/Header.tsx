@@ -19,6 +19,7 @@ export function Header() {
     { to: "/search", label: t("nav_search") },
     { to: "/emergency", label: t("nav_emergency") },
     { to: "/about", label: t("nav_about") },
+    { to: "/contact", label: t("nav_contact") },
   ] as const;
 
   return (
