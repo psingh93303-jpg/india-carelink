@@ -6,6 +6,8 @@ import { AuthProvider } from "@/lib/auth";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Toaster } from "@/components/ui/sonner";
+import { SplashScreen } from "@/components/SplashScreen";
+import { InstallPrompt } from "@/components/InstallPrompt";
 
 function NotFoundComponent() {
   return (
@@ -33,7 +35,12 @@ export const Route = createRootRoute({
   head: () => ({
     meta: [
       { charSet: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1" },
+      { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
+      { name: "theme-color", content: "#0fb5a8" },
+      { name: "apple-mobile-web-app-capable", content: "yes" },
+      { name: "mobile-web-app-capable", content: "yes" },
+      { name: "apple-mobile-web-app-status-bar-style", content: "black-translucent" },
+      { name: "apple-mobile-web-app-title", content: "MediFinder" },
       { title: "MediFinder — Find hospitals & emergency care in Uttar Pradesh" },
       { name: "description", content: "Search hospitals, clinics & emergency services across Uttar Pradesh by city, specialty, ICU, ambulance and 24/7 availability." },
       { name: "author", content: "MediFinder" },
@@ -48,10 +55,11 @@ export const Route = createRootRoute({
       { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/3803729f-0857-4b96-932c-ba4150fdc6ce/id-preview-7d5bdbf1--4b9eac5d-bd30-4d72-b0f2-d9723a51fcad.lovable.app-1776684651668.png" },
     ],
     links: [
-      {
-        rel: "stylesheet",
-        href: appCss,
-      },
+      { rel: "stylesheet", href: appCss },
+      { rel: "manifest", href: "/manifest.webmanifest" },
+      { rel: "apple-touch-icon", href: "/apple-touch-icon.png" },
+      { rel: "icon", type: "image/png", sizes: "192x192", href: "/icon-192.png" },
+      { rel: "icon", type: "image/png", sizes: "512x512", href: "/icon-512.png" },
     ],
   }),
   shellComponent: RootShell,
@@ -77,6 +85,7 @@ function RootComponent() {
   return (
     <AuthProvider>
       <I18nProvider>
+        <SplashScreen />
         <div className="flex min-h-screen flex-col bg-background">
           <Header />
           <main className="flex-1">
@@ -84,6 +93,7 @@ function RootComponent() {
           </main>
           <Footer />
           <Toaster />
+          <InstallPrompt />
         </div>
       </I18nProvider>
     </AuthProvider>
