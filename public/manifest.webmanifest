@@ -1,0 +1,40 @@
+{
+  "name": "MediFinder — Hospitals & Emergency Care",
+  "short_name": "MediFinder",
+  "description": "Find hospitals, ICU, ambulance and 24/7 emergency care across Uttar Pradesh.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0fb5a8",
+  "theme_color": "#0fb5a8",
+  "categories": ["medical", "health", "lifestyle"],
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Emergency",
+      "short_name": "Emergency",
+      "url": "/emergency",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Search hospitals",
+      "short_name": "Search",
+      "url": "/search",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}
