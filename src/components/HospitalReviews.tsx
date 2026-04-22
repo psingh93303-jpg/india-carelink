@@ -55,11 +55,8 @@ export function HospitalReviews({ hospitalId }: { hospitalId: string }) {
     const userIds = [...new Set(list.map((r) => r.user_id))];
     let names = new Map<string, string | null>();
     if (userIds.length) {
-      const { data: profs } = await supabase
-        .from("profiles")
-        .select("user_id,display_name")
-        .in("user_id", userIds);
-      names = new Map((profs ?? []).map((p) => [p.user_id, p.display_name]));
+      const { data: profs } = await supabase.rpc("get_reviewer_names", { _user_ids: userIds });
+      names = new Map((profs ?? []).map((p: { user_id: string; display_name: string | null }) => [p.user_id, p.display_name]));
     }
     setApproved(list.map((r) => ({ ...r, display_name: names.get(r.user_id) ?? null })));
 
