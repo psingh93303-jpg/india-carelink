@@ -1,6 +1,6 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Plus, Pencil, Trash2, Loader2, Search, Star, Upload, X, Check, Crosshair } from "lucide-react";
+import { Plus, Pencil, Trash2, Loader2, Search, Star, Upload, X, Check, Crosshair, Stethoscope } from "lucide-react";
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -264,6 +264,9 @@ function AdminHospitals() {
                     </td>
                     <td className="p-3">
                       <div className="flex justify-end gap-1">
+                        <Button asChild variant="ghost" size="icon" title="Manage doctors / departments / staff">
+                          <Link to="/admin/cms/$hospitalId" params={{ hospitalId: r.id }}><Stethoscope className="h-4 w-4" /></Link>
+                        </Button>
                         <Button variant="ghost" size="icon" onClick={() => startEdit(r.id)}><Pencil className="h-4 w-4" /></Button>
                         <Button variant="ghost" size="icon" onClick={() => setDelId(r.id)}><Trash2 className="h-4 w-4 text-destructive" /></Button>
                       </div>
