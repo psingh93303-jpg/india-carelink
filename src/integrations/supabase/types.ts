@@ -14,6 +14,163 @@ export type Database = {
   }
   public: {
     Tables: {
+      departments: {
+        Row: {
+          created_at: string
+          description: string
+          display_order: number
+          head_doctor: string
+          hospital_id: string
+          id: string
+          name: string
+          name_hi: string | null
+          phone: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string
+          display_order?: number
+          head_doctor?: string
+          hospital_id: string
+          id?: string
+          name: string
+          name_hi?: string | null
+          phone?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          display_order?: number
+          head_doctor?: string
+          hospital_id?: string
+          id?: string
+          name?: string
+          name_hi?: string | null
+          phone?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "departments_hospital_id_fkey"
+            columns: ["hospital_id"]
+            isOneToOne: false
+            referencedRelation: "hospitals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      doctors: {
+        Row: {
+          consultation_hours: string
+          created_at: string
+          department_id: string | null
+          display_order: number
+          email: string
+          hospital_id: string
+          id: string
+          name: string
+          name_hi: string | null
+          phone: string
+          photo_url: string
+          qualification: string
+          specialty: string
+          updated_at: string
+        }
+        Insert: {
+          consultation_hours?: string
+          created_at?: string
+          department_id?: string | null
+          display_order?: number
+          email?: string
+          hospital_id: string
+          id?: string
+          name: string
+          name_hi?: string | null
+          phone?: string
+          photo_url?: string
+          qualification?: string
+          specialty?: string
+          updated_at?: string
+        }
+        Update: {
+          consultation_hours?: string
+          created_at?: string
+          department_id?: string | null
+          display_order?: number
+          email?: string
+          hospital_id?: string
+          id?: string
+          name?: string
+          name_hi?: string | null
+          phone?: string
+          photo_url?: string
+          qualification?: string
+          specialty?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "doctors_department_id_fkey"
+            columns: ["department_id"]
+            isOneToOne: false
+            referencedRelation: "departments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "doctors_hospital_id_fkey"
+            columns: ["hospital_id"]
+            isOneToOne: false
+            referencedRelation: "hospitals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hospital_staff: {
+        Row: {
+          created_at: string
+          display_order: number
+          email: string
+          hospital_id: string
+          id: string
+          name: string
+          phone: string
+          role_title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          display_order?: number
+          email?: string
+          hospital_id: string
+          id?: string
+          name: string
+          phone?: string
+          role_title?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          display_order?: number
+          email?: string
+          hospital_id?: string
+          id?: string
+          name?: string
+          phone?: string
+          role_title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hospital_staff_hospital_id_fkey"
+            columns: ["hospital_id"]
+            isOneToOne: false
+            referencedRelation: "hospitals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       hospitals: {
         Row: {
           about: string
@@ -273,6 +430,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      can_edit_hospital: { Args: { _user_id: string }; Returns: boolean }
       get_reviewer_names: {
         Args: { _user_ids: string[] }
         Returns: {
@@ -287,9 +445,15 @@ export type Database = {
         }
         Returns: boolean
       }
+      is_staff: { Args: { _user_id: string }; Returns: boolean }
     }
     Enums: {
-      app_role: "admin" | "user"
+      app_role:
+        | "admin"
+        | "user"
+        | "manager"
+        | "hospital_manager"
+        | "financial_manager"
       review_status: "pending" | "approved" | "rejected"
     }
     CompositeTypes: {
@@ -418,7 +582,13 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["admin", "user"],
+      app_role: [
+        "admin",
+        "user",
+        "manager",
+        "hospital_manager",
+        "financial_manager",
+      ],
       review_status: ["pending", "approved", "rejected"],
     },
   },

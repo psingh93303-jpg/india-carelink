@@ -12,29 +12,31 @@ export const Route = createFileRoute("/admin")({
     if (!session) {
       throw redirect({ to: "/auth", search: { redirect: location.pathname } });
     }
-    const { data: role } = await supabase
+    const { data: roles } = await supabase
       .from("user_roles")
       .select("role")
-      .eq("user_id", session.user.id)
-      .eq("role", "admin")
-      .maybeSingle();
-    if (!role) {
+      .eq("user_id", session.user.id);
+    const allowed = ["admin", "manager", "hospital_manager", "financial_manager"];
+    if (!roles?.some((r) => allowed.includes(r.role))) {
       throw redirect({ to: "/admin/forbidden" });
     }
   },
   component: AdminLayout,
 });
 
-const NAV: { to: string; label: string; icon: typeof LayoutDashboard; exact?: boolean }[] = [
-  { to: "/admin", label: "Dashboard", icon: LayoutDashboard, exact: true },
-  { to: "/admin/hospitals", label: "Hospitals", icon: Building2 },
-  { to: "/admin/reviews", label: "Reviews", icon: MessageSquare },
-  { to: "/admin/users", label: "Users", icon: Users },
-  { to: "/admin/site", label: "Site Settings", icon: Settings },
+type NavItem = { to: string; label: string; icon: typeof LayoutDashboard; exact?: boolean; show: (a: ReturnType<typeof useAuth>) => boolean };
+
+const NAV: NavItem[] = [
+  { to: "/admin", label: "Dashboard", icon: LayoutDashboard, exact: true, show: () => true },
+  { to: "/admin/hospitals", label: "Hospitals", icon: Building2, show: (a) => a.canEditHospital || a.isStaff },
+  { to: "/admin/reviews", label: "Reviews", icon: MessageSquare, show: (a) => a.canEditHospital || a.isAdmin },
+  { to: "/admin/users", label: "Users", icon: Users, show: (a) => a.canManageUsers },
+  { to: "/admin/site", label: "Site Settings", icon: Settings, show: (a) => a.isAdmin },
 ];
 
 function AdminLayout() {
-  const { signOut, user } = useAuth();
+  const auth = useAuth();
+  const { signOut, user } = auth;
   const { location } = useRouterState();
   const [pendingCount, setPendingCount] = useState<number>(0);
 
@@ -61,7 +63,7 @@ function AdminLayout() {
               </div>
             </div>
             <nav className="mt-2 space-y-1">
-              {NAV.map((item) => {
+              {NAV.filter((i) => i.show(auth)).map((item) => {
                 const active = item.exact
                   ? location.pathname === item.to
                   : location.pathname.startsWith(item.to);

@@ -59,6 +59,10 @@ const dict = {
     testing_notice: "This website is still in testing phase, hence it is available only in some districts of Uttar Pradesh.",
     whats_new_title: "What's new",
     got_it: "Got it",
+    departments: "Departments",
+    doctors: "Doctors",
+    staff: "Staff",
+    head_doctor: "Head doctor",
   },
   hi: {
     brand: "केयरलिंक इंडिया",
@@ -116,6 +120,10 @@ const dict = {
     testing_notice: "यह वेबसाइट अभी परीक्षण चरण में है, इसलिए यह केवल उत्तर प्रदेश के कुछ जिलों में ही उपलब्ध है।",
     whats_new_title: "नया क्या है",
     got_it: "ठीक है",
+    departments: "विभाग",
+    doctors: "डॉक्टर",
+    staff: "स्टाफ़",
+    head_doctor: "मुख्य डॉक्टर",
   },
 } as const;
 
