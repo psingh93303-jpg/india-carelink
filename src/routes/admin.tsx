@@ -12,13 +12,12 @@ export const Route = createFileRoute("/admin")({
     if (!session) {
       throw redirect({ to: "/auth", search: { redirect: location.pathname } });
     }
-    const { data: role } = await supabase
+    const { data: roles } = await supabase
       .from("user_roles")
       .select("role")
-      .eq("user_id", session.user.id)
-      .eq("role", "admin")
-      .maybeSingle();
-    if (!role) {
+      .eq("user_id", session.user.id);
+    const allowed = ["admin", "manager", "hospital_manager", "financial_manager"];
+    if (!roles?.some((r) => allowed.includes(r.role))) {
       throw redirect({ to: "/admin/forbidden" });
     }
   },
