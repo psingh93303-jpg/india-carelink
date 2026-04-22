@@ -17,6 +17,8 @@ export function Header() {
   const links = [
     { to: "/", label: t("nav_home") },
     { to: "/search", label: t("nav_search") },
+    { to: "/symptom-search", label: t("nav_symptom") },
+    { to: "/labs", label: t("nav_labs") },
     { to: "/emergency", label: t("nav_emergency") },
     { to: "/about", label: t("nav_about") },
     { to: "/contact", label: t("nav_contact") },

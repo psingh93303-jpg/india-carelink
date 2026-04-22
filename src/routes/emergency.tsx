@@ -1,20 +1,19 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Siren, MapPin, Phone, Loader2, AlertCircle } from "lucide-react";
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useI18n } from "@/lib/i18n";
-import { distanceKm } from "@/data/hospitals";
 import { HospitalCard } from "@/components/HospitalCard";
 import { MapView } from "@/components/MapView";
 import { useHospitals } from "@/hooks/useHospitals";
+import { useUserLocation, distanceKm } from "@/lib/geo";
 
 export const Route = createFileRoute("/emergency")({
   head: () => ({
     meta: [
-      { title: "Emergency Mode — Nearest hospitals · MediFinder" },
-      { name: "description", content: "Find the nearest hospital with emergency, ICU and ambulance services in Uttar Pradesh." },
-      { property: "og:title", content: "Emergency Mode — MediFinder" },
-      { property: "og:description", content: "One-tap nearest emergency hospital finder for Uttar Pradesh." },
+      { title: "Emergency Mode — Nearest hospitals · CareLink India" },
+      { name: "description", content: "Find the nearest hospital with emergency, ICU and ambulance services across India." },
+      { property: "og:title", content: "Emergency Mode — CareLink India" },
+      { property: "og:description", content: "One-tap nearest emergency hospital finder for India." },
     ],
   }),
   component: EmergencyPage,
@@ -23,43 +22,20 @@ export const Route = createFileRoute("/emergency")({
 function EmergencyPage() {
   const { t } = useI18n();
   const { hospitals: HOSPITALS } = useHospitals();
-  const [loc, setLoc] = useState<{ lat: number; lng: number } | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const { loc, loading, error, request } = useUserLocation();
 
-  const requestLocation = () => {
-    setError(null);
-    if (!navigator.geolocation) {
-      setError("Geolocation is not supported by your browser.");
-      return;
-    }
-    setLoading(true);
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        setLoc({ lat: pos.coords.latitude, lng: pos.coords.longitude });
-        setLoading(false);
-      },
-      (err) => {
-        setError(err.message || "Unable to get location.");
-        setLoading(false);
-        // Fallback to Lucknow center
-        setLoc({ lat: 26.8467, lng: 80.9462 });
-      },
-      { enableHighAccuracy: true, timeout: 10000 },
-    );
-  };
+  const effectiveLoc = loc ?? (error ? { lat: 26.8467, lng: 80.9462 } : null);
 
   const emergencyHospitals = HOSPITALS.filter((h) => h.emergency);
-  const nearest = loc
+  const nearest = effectiveLoc
     ? emergencyHospitals
-        .map((h) => ({ h, d: distanceKm(loc, h) }))
+        .map((h) => ({ h, d: distanceKm(effectiveLoc, h) }))
         .sort((a, b) => a.d - b.d)
         .slice(0, 8)
     : [];
 
   return (
     <div>
-      {/* Emergency hero */}
       <section className="bg-gradient-emergency text-emergency-foreground">
         <div className="container mx-auto px-4 py-10 md:py-16">
           <div className="flex items-start gap-4 max-w-3xl">
@@ -70,7 +46,7 @@ function EmergencyPage() {
               <h1 className="text-3xl md:text-4xl font-bold">{t("emergency_title")}</h1>
               <p className="mt-2 opacity-90">{t("emergency_desc")}</p>
               <div className="mt-5 flex flex-wrap items-center gap-3">
-                <Button onClick={requestLocation} disabled={loading} size="lg" variant="secondary" className="font-semibold">
+                <Button onClick={request} disabled={loading} size="lg" variant="secondary" className="font-semibold">
                   {loading ? <><Loader2 className="h-4 w-4 animate-spin" />{t("locating")}</> : <><MapPin className="h-4 w-4" />{t("use_my_location")}</>}
                 </Button>
                 <Button asChild size="lg" variant="outline" className="bg-white/10 border-white/30 text-white hover:bg-white/20 hover:text-white">
@@ -88,28 +64,25 @@ function EmergencyPage() {
         </div>
       </section>
 
-      {/* Results */}
       <section className="container mx-auto px-4 py-10">
-        {loc ? (
-          <>
-            <div className="grid lg:grid-cols-2 gap-6">
-              <div>
-                <h2 className="text-xl font-bold">{t("nearest_hospitals")}</h2>
-                <div className="mt-4 space-y-4">
-                  {nearest.map(({ h, d }) => (
-                    <HospitalCard key={h.id} hospital={h} distanceKm={d} />
-                  ))}
-                </div>
-              </div>
-              <div className="lg:sticky lg:top-24 self-start">
-                <MapView
-                  points={nearest.map(({ h }) => ({ id: h.id, name: h.name, lat: h.lat, lng: h.lng, emergency: true }))}
-                  userLocation={loc}
-                  height={520}
-                />
+        {effectiveLoc ? (
+          <div className="grid lg:grid-cols-2 gap-6">
+            <div>
+              <h2 className="text-xl font-bold">{t("nearest_hospitals")}</h2>
+              <div className="mt-4 space-y-4">
+                {nearest.map(({ h, d }) => (
+                  <HospitalCard key={h.id} hospital={h} distanceKm={d} />
+                ))}
               </div>
             </div>
-          </>
+            <div className="lg:sticky lg:top-24 self-start">
+              <MapView
+                points={nearest.map(({ h }) => ({ id: h.id, name: h.name, lat: h.lat, lng: h.lng, emergency: true }))}
+                userLocation={effectiveLoc}
+                height={520}
+              />
+            </div>
+          </div>
         ) : (
           <div className="rounded-2xl border border-dashed border-border p-12 text-center">
             <Siren className="mx-auto h-10 w-10 text-emergency" />
