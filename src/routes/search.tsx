@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { zodValidator, fallback } from "@tanstack/zod-adapter";
 import { z } from "zod";
-import { Search, SlidersHorizontal, X } from "lucide-react";
+import { Search, SlidersHorizontal, X, Crosshair, Loader2 } from "lucide-react";
 import { useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,6 +12,7 @@ import { useI18n } from "@/lib/i18n";
 import { CITIES, SPECIALTIES, type Specialty } from "@/data/hospitals";
 import { HospitalCard } from "@/components/HospitalCard";
 import { useHospitals } from "@/hooks/useHospitals";
+import { useUserLocation, distanceKm } from "@/lib/geo";
 
 const searchSchema = z.object({
   q: fallback(z.string(), "").default(""),
@@ -40,13 +41,14 @@ function SearchPage() {
   const search = Route.useSearch();
   const navigate = Route.useNavigate();
   const { hospitals: HOSPITALS } = useHospitals();
+  const geo = useUserLocation();
 
   const update = (patch: Record<string, unknown>) =>
     navigate({ search: (prev: Record<string, unknown>) => ({ ...prev, ...patch }) as never });
 
   const results = useMemo(() => {
     const q = search.q.trim().toLowerCase();
-    return HOSPITALS.filter((h) => {
+    const list = HOSPITALS.filter((h) => {
       if (q && !(`${h.name} ${h.city} ${h.address} ${h.specialties.join(" ")}`.toLowerCase().includes(q))) return false;
       if (search.city && h.city !== search.city) return false;
       if (search.specialty && !h.specialties.includes(search.specialty as Specialty)) return false;
@@ -56,8 +58,16 @@ function SearchPage() {
       if (search.open24_7 && !h.open24_7) return false;
       if (search.minRating > 0 && h.rating < search.minRating) return false;
       return true;
-    }).sort((a, b) => Number(b.featured ?? false) - Number(a.featured ?? false) || b.rating - a.rating);
-  }, [search, HOSPITALS]);
+    });
+    if (geo.loc) {
+      return list
+        .map((h) => ({ h, d: distanceKm(geo.loc!, h) }))
+        .sort((a, b) => a.d - b.d);
+    }
+    return list
+      .sort((a, b) => Number(b.featured ?? false) - Number(a.featured ?? false) || b.rating - a.rating)
+      .map((h) => ({ h, d: undefined as number | undefined }));
+  }, [search, HOSPITALS, geo.loc]);
 
   const activeFiltersCount = [
     search.city, search.specialty, search.emergency, search.icu, search.ambulance, search.open24_7, search.minRating > 0,
@@ -152,8 +162,12 @@ function SearchPage() {
             />
           </div>
 
-          <div className="mt-4 flex items-center justify-between">
+          <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
             <p className="text-sm text-muted-foreground">{results.length} {t("results")}</p>
+            <Button size="sm" variant={geo.loc ? "secondary" : "outline"} onClick={geo.request} disabled={geo.loading}>
+              {geo.loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Crosshair className="h-4 w-4" />}
+              {geo.loc ? t("near_me_on") : t("near_me")}
+            </Button>
           </div>
 
           {results.length === 0 ? (
@@ -163,7 +177,7 @@ function SearchPage() {
             </div>
           ) : (
             <div className="mt-5 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
-              {results.map((h) => <HospitalCard key={h.id} hospital={h} />)}
+              {results.map(({ h, d }) => <HospitalCard key={h.id} hospital={h} distanceKm={d} />)}
             </div>
           )}
 

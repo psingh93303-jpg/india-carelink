@@ -74,6 +74,9 @@ function Index() {
                 <Search className="h-4 w-4" />
                 {t("hero_cta_search")}
               </Button>
+              <Button asChild type="button" variant="outline" size="lg" className="h-12 px-6">
+                <Link to="/symptom-search"><Stethoscope className="h-4 w-4" /> Symptom Checker</Link>
+              </Button>
               <Button asChild type="button" variant="emergency" size="lg" className="h-12 px-6 animate-pulse-emergency">
                 <Link to="/emergency"><Siren className="h-4 w-4" />{t("hero_cta_emergency")}</Link>
               </Button>
