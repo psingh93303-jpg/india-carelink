@@ -9,7 +9,9 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SymptomSearchRouteImport } from './routes/symptom-search'
 import { Route as SearchRouteImport } from './routes/search'
+import { Route as LabsRouteImport } from './routes/labs'
 import { Route as EmergencyRouteImport } from './routes/emergency'
 import { Route as DisclaimerRouteImport } from './routes/disclaimer'
 import { Route as ContactRouteImport } from './routes/contact'
@@ -22,13 +24,25 @@ import { Route as HospitalIdRouteImport } from './routes/hospital.$id'
 import { Route as AdminUsersRouteImport } from './routes/admin.users'
 import { Route as AdminSiteRouteImport } from './routes/admin.site'
 import { Route as AdminReviewsRouteImport } from './routes/admin.reviews'
+import { Route as AdminLinksRouteImport } from './routes/admin.links'
+import { Route as AdminLabsRouteImport } from './routes/admin.labs'
 import { Route as AdminHospitalsRouteImport } from './routes/admin.hospitals'
 import { Route as AdminForbiddenRouteImport } from './routes/admin.forbidden'
 import { Route as AdminCmsHospitalIdRouteImport } from './routes/admin.cms.$hospitalId'
 
+const SymptomSearchRoute = SymptomSearchRouteImport.update({
+  id: '/symptom-search',
+  path: '/symptom-search',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SearchRoute = SearchRouteImport.update({
   id: '/search',
   path: '/search',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LabsRoute = LabsRouteImport.update({
+  id: '/labs',
+  path: '/labs',
   getParentRoute: () => rootRouteImport,
 } as any)
 const EmergencyRoute = EmergencyRouteImport.update({
@@ -91,6 +105,16 @@ const AdminReviewsRoute = AdminReviewsRouteImport.update({
   path: '/reviews',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminLinksRoute = AdminLinksRouteImport.update({
+  id: '/links',
+  path: '/links',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminLabsRoute = AdminLabsRouteImport.update({
+  id: '/labs',
+  path: '/labs',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminHospitalsRoute = AdminHospitalsRouteImport.update({
   id: '/hospitals',
   path: '/hospitals',
@@ -115,9 +139,13 @@ export interface FileRoutesByFullPath {
   '/contact': typeof ContactRoute
   '/disclaimer': typeof DisclaimerRoute
   '/emergency': typeof EmergencyRoute
+  '/labs': typeof LabsRoute
   '/search': typeof SearchRoute
+  '/symptom-search': typeof SymptomSearchRoute
   '/admin/forbidden': typeof AdminForbiddenRoute
   '/admin/hospitals': typeof AdminHospitalsRoute
+  '/admin/labs': typeof AdminLabsRoute
+  '/admin/links': typeof AdminLinksRoute
   '/admin/reviews': typeof AdminReviewsRoute
   '/admin/site': typeof AdminSiteRoute
   '/admin/users': typeof AdminUsersRoute
@@ -132,9 +160,13 @@ export interface FileRoutesByTo {
   '/contact': typeof ContactRoute
   '/disclaimer': typeof DisclaimerRoute
   '/emergency': typeof EmergencyRoute
+  '/labs': typeof LabsRoute
   '/search': typeof SearchRoute
+  '/symptom-search': typeof SymptomSearchRoute
   '/admin/forbidden': typeof AdminForbiddenRoute
   '/admin/hospitals': typeof AdminHospitalsRoute
+  '/admin/labs': typeof AdminLabsRoute
+  '/admin/links': typeof AdminLinksRoute
   '/admin/reviews': typeof AdminReviewsRoute
   '/admin/site': typeof AdminSiteRoute
   '/admin/users': typeof AdminUsersRoute
@@ -151,9 +183,13 @@ export interface FileRoutesById {
   '/contact': typeof ContactRoute
   '/disclaimer': typeof DisclaimerRoute
   '/emergency': typeof EmergencyRoute
+  '/labs': typeof LabsRoute
   '/search': typeof SearchRoute
+  '/symptom-search': typeof SymptomSearchRoute
   '/admin/forbidden': typeof AdminForbiddenRoute
   '/admin/hospitals': typeof AdminHospitalsRoute
+  '/admin/labs': typeof AdminLabsRoute
+  '/admin/links': typeof AdminLinksRoute
   '/admin/reviews': typeof AdminReviewsRoute
   '/admin/site': typeof AdminSiteRoute
   '/admin/users': typeof AdminUsersRoute
@@ -171,9 +207,13 @@ export interface FileRouteTypes {
     | '/contact'
     | '/disclaimer'
     | '/emergency'
+    | '/labs'
     | '/search'
+    | '/symptom-search'
     | '/admin/forbidden'
     | '/admin/hospitals'
+    | '/admin/labs'
+    | '/admin/links'
     | '/admin/reviews'
     | '/admin/site'
     | '/admin/users'
@@ -188,9 +228,13 @@ export interface FileRouteTypes {
     | '/contact'
     | '/disclaimer'
     | '/emergency'
+    | '/labs'
     | '/search'
+    | '/symptom-search'
     | '/admin/forbidden'
     | '/admin/hospitals'
+    | '/admin/labs'
+    | '/admin/links'
     | '/admin/reviews'
     | '/admin/site'
     | '/admin/users'
@@ -206,9 +250,13 @@ export interface FileRouteTypes {
     | '/contact'
     | '/disclaimer'
     | '/emergency'
+    | '/labs'
     | '/search'
+    | '/symptom-search'
     | '/admin/forbidden'
     | '/admin/hospitals'
+    | '/admin/labs'
+    | '/admin/links'
     | '/admin/reviews'
     | '/admin/site'
     | '/admin/users'
@@ -225,17 +273,33 @@ export interface RootRouteChildren {
   ContactRoute: typeof ContactRoute
   DisclaimerRoute: typeof DisclaimerRoute
   EmergencyRoute: typeof EmergencyRoute
+  LabsRoute: typeof LabsRoute
   SearchRoute: typeof SearchRoute
+  SymptomSearchRoute: typeof SymptomSearchRoute
   HospitalIdRoute: typeof HospitalIdRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/symptom-search': {
+      id: '/symptom-search'
+      path: '/symptom-search'
+      fullPath: '/symptom-search'
+      preLoaderRoute: typeof SymptomSearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/search': {
       id: '/search'
       path: '/search'
       fullPath: '/search'
       preLoaderRoute: typeof SearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/labs': {
+      id: '/labs'
+      path: '/labs'
+      fullPath: '/labs'
+      preLoaderRoute: typeof LabsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/emergency': {
@@ -322,6 +386,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminReviewsRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/links': {
+      id: '/admin/links'
+      path: '/links'
+      fullPath: '/admin/links'
+      preLoaderRoute: typeof AdminLinksRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/labs': {
+      id: '/admin/labs'
+      path: '/labs'
+      fullPath: '/admin/labs'
+      preLoaderRoute: typeof AdminLabsRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/hospitals': {
       id: '/admin/hospitals'
       path: '/hospitals'
@@ -349,6 +427,8 @@ declare module '@tanstack/react-router' {
 interface AdminRouteChildren {
   AdminForbiddenRoute: typeof AdminForbiddenRoute
   AdminHospitalsRoute: typeof AdminHospitalsRoute
+  AdminLabsRoute: typeof AdminLabsRoute
+  AdminLinksRoute: typeof AdminLinksRoute
   AdminReviewsRoute: typeof AdminReviewsRoute
   AdminSiteRoute: typeof AdminSiteRoute
   AdminUsersRoute: typeof AdminUsersRoute
@@ -359,6 +439,8 @@ interface AdminRouteChildren {
 const AdminRouteChildren: AdminRouteChildren = {
   AdminForbiddenRoute: AdminForbiddenRoute,
   AdminHospitalsRoute: AdminHospitalsRoute,
+  AdminLabsRoute: AdminLabsRoute,
+  AdminLinksRoute: AdminLinksRoute,
   AdminReviewsRoute: AdminReviewsRoute,
   AdminSiteRoute: AdminSiteRoute,
   AdminUsersRoute: AdminUsersRoute,
@@ -376,7 +458,9 @@ const rootRouteChildren: RootRouteChildren = {
   ContactRoute: ContactRoute,
   DisclaimerRoute: DisclaimerRoute,
   EmergencyRoute: EmergencyRoute,
+  LabsRoute: LabsRoute,
   SearchRoute: SearchRoute,
+  SymptomSearchRoute: SymptomSearchRoute,
   HospitalIdRoute: HospitalIdRoute,
 }
 export const routeTree = rootRouteImport
