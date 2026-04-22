@@ -1,17 +1,23 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { ArrowLeft, MapPin, Phone, Star, Siren, Clock, Ambulance, HeartPulse, ExternalLink, Stethoscope } from "lucide-react";
+import { ArrowLeft, MapPin, Phone, Star, Siren, Clock, Ambulance, HeartPulse, ExternalLink, Stethoscope, Building2, Users as UsersIcon, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useI18n } from "@/lib/i18n";
 import { fetchHospitalById } from "@/lib/hospitals-api";
 import { MapView } from "@/components/MapView";
 import { HospitalReviews } from "@/components/HospitalReviews";
+import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/hospital/$id")({
   loader: async ({ params }) => {
     const hospital = await fetchHospitalById(params.id);
     if (!hospital) throw notFound();
-    return { hospital };
+    const [d, dr, s] = await Promise.all([
+      supabase.from("departments").select("*").eq("hospital_id", params.id).order("display_order").order("name"),
+      supabase.from("doctors").select("*").eq("hospital_id", params.id).order("display_order").order("name"),
+      supabase.from("hospital_staff").select("*").eq("hospital_id", params.id).order("display_order").order("name"),
+    ]);
+    return { hospital, departments: d.data ?? [], doctors: dr.data ?? [], staff: s.data ?? [] };
   },
   head: ({ loaderData }) => ({
     meta: loaderData
