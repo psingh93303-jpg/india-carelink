@@ -243,6 +243,75 @@ export type Database = {
         }
         Relationships: []
       }
+      pathology_labs: {
+        Row: {
+          about: string
+          accreditation: string
+          address: string
+          city: string
+          city_hi: string | null
+          created_at: string
+          email: string
+          featured: boolean
+          home_collection: boolean
+          id: string
+          image: string
+          lat: number
+          lng: number
+          name: string
+          name_hi: string | null
+          open_24_7: boolean
+          phone: string
+          rating: number
+          tests: string[]
+          updated_at: string
+        }
+        Insert: {
+          about?: string
+          accreditation?: string
+          address: string
+          city: string
+          city_hi?: string | null
+          created_at?: string
+          email?: string
+          featured?: boolean
+          home_collection?: boolean
+          id?: string
+          image?: string
+          lat: number
+          lng: number
+          name: string
+          name_hi?: string | null
+          open_24_7?: boolean
+          phone?: string
+          rating?: number
+          tests?: string[]
+          updated_at?: string
+        }
+        Update: {
+          about?: string
+          accreditation?: string
+          address?: string
+          city?: string
+          city_hi?: string | null
+          created_at?: string
+          email?: string
+          featured?: boolean
+          home_collection?: boolean
+          id?: string
+          image?: string
+          lat?: number
+          lng?: number
+          name?: string
+          name_hi?: string | null
+          open_24_7?: boolean
+          phone?: string
+          rating?: number
+          tests?: string[]
+          updated_at?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -374,6 +443,48 @@ export type Database = {
           updated_at?: string
           whats_new_en?: string
           whats_new_hi?: string
+        }
+        Relationships: []
+      }
+      trusted_links: {
+        Row: {
+          active: boolean
+          category: string
+          created_at: string
+          description: string
+          description_hi: string
+          display_order: number
+          id: string
+          title: string
+          title_hi: string | null
+          updated_at: string
+          url: string
+        }
+        Insert: {
+          active?: boolean
+          category?: string
+          created_at?: string
+          description?: string
+          description_hi?: string
+          display_order?: number
+          id?: string
+          title: string
+          title_hi?: string | null
+          updated_at?: string
+          url: string
+        }
+        Update: {
+          active?: boolean
+          category?: string
+          created_at?: string
+          description?: string
+          description_hi?: string
+          display_order?: number
+          id?: string
+          title?: string
+          title_hi?: string | null
+          updated_at?: string
+          url?: string
         }
         Relationships: []
       }

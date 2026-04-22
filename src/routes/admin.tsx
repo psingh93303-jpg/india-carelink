@@ -1,6 +1,6 @@
 import { createFileRoute, Link, Outlet, redirect, useRouterState } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { LayoutDashboard, Building2, MessageSquare, Users, LogOut, Activity, ArrowLeft, Settings } from "lucide-react";
+import { LayoutDashboard, Building2, MessageSquare, Users, LogOut, Activity, ArrowLeft, Settings, FlaskConical, Link2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { cn } from "@/lib/utils";
@@ -29,7 +29,9 @@ type NavItem = { to: string; label: string; icon: typeof LayoutDashboard; exact?
 const NAV: NavItem[] = [
   { to: "/admin", label: "Dashboard", icon: LayoutDashboard, exact: true, show: () => true },
   { to: "/admin/hospitals", label: "Hospitals", icon: Building2, show: (a) => a.canEditHospital || a.isStaff },
+  { to: "/admin/labs", label: "Pathology Labs", icon: FlaskConical, show: (a) => a.canEditHospital || a.isStaff },
   { to: "/admin/reviews", label: "Reviews", icon: MessageSquare, show: (a) => a.canEditHospital || a.isAdmin },
+  { to: "/admin/links", label: "Trusted Links", icon: Link2, show: (a) => a.isAdmin },
   { to: "/admin/users", label: "Users", icon: Users, show: (a) => a.canManageUsers },
   { to: "/admin/site", label: "Site Settings", icon: Settings, show: (a) => a.isAdmin },
 ];
