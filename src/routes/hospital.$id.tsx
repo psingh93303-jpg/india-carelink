@@ -49,9 +49,10 @@ export const Route = createFileRoute("/hospital/$id")({
 });
 
 function HospitalPage() {
-  const { hospital } = Route.useLoaderData();
+  const { hospital, departments, doctors, staff } = Route.useLoaderData();
   const { t } = useI18n();
   const mapsUrl = `https://www.openstreetmap.org/?mlat=${hospital.lat}&mlon=${hospital.lng}#map=17/${hospital.lat}/${hospital.lng}`;
+  const deptName = (id: string | null) => departments.find((d) => d.id === id)?.name ?? null;
 
   return (
     <div>
@@ -118,6 +119,72 @@ function HospitalPage() {
                 ))}
               </div>
             </div>
+
+            {departments.length > 0 && (
+              <div className="rounded-2xl border border-border bg-card p-6 shadow-soft">
+                <h2 className="font-semibold text-lg flex items-center gap-2"><Building2 className="h-5 w-5 text-primary" /> {t("departments")}</h2>
+                <div className="mt-4 grid sm:grid-cols-2 gap-3">
+                  {departments.map((d) => (
+                    <div key={d.id} className="rounded-xl border border-border p-4">
+                      <div className="font-semibold">{d.name}</div>
+                      {d.head_doctor && <div className="mt-1 text-sm text-muted-foreground">{t("head_doctor")}: {d.head_doctor}</div>}
+                      {d.description && <p className="mt-2 text-sm text-muted-foreground">{d.description}</p>}
+                      {d.phone && <a href={`tel:${d.phone}`} className="mt-2 inline-flex items-center gap-1 text-sm text-primary hover:underline"><Phone className="h-3 w-3" /> {d.phone}</a>}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {doctors.length > 0 && (
+              <div className="rounded-2xl border border-border bg-card p-6 shadow-soft">
+                <h2 className="font-semibold text-lg flex items-center gap-2"><Stethoscope className="h-5 w-5 text-primary" /> {t("doctors")}</h2>
+                <div className="mt-4 grid sm:grid-cols-2 gap-3">
+                  {doctors.map((doc) => (
+                    <div key={doc.id} className="rounded-xl border border-border p-4 flex gap-3">
+                      {doc.photo_url ? (
+                        <img src={doc.photo_url} alt={doc.name} className="h-14 w-14 rounded-full object-cover flex-shrink-0 bg-muted" />
+                      ) : (
+                        <div className="h-14 w-14 rounded-full bg-primary/10 text-primary flex items-center justify-center flex-shrink-0 font-semibold">
+                          {doc.name.split(" ").map((n) => n[0]).slice(0, 2).join("")}
+                        </div>
+                      )}
+                      <div className="min-w-0 flex-1">
+                        <div className="font-semibold truncate">{doc.name}</div>
+                        {doc.qualification && <div className="text-xs text-muted-foreground truncate">{doc.qualification}</div>}
+                        {doc.specialty && <div className="text-sm text-primary mt-0.5 truncate">{doc.specialty}</div>}
+                        {deptName(doc.department_id) && <div className="text-xs text-muted-foreground mt-0.5">{deptName(doc.department_id)}</div>}
+                        {doc.consultation_hours && <div className="text-xs text-muted-foreground mt-1 flex items-center gap-1"><Clock className="h-3 w-3" />{doc.consultation_hours}</div>}
+                        <div className="mt-1 flex flex-wrap gap-3 text-xs">
+                          {doc.phone && <a href={`tel:${doc.phone}`} className="text-primary hover:underline inline-flex items-center gap-1"><Phone className="h-3 w-3" />{doc.phone}</a>}
+                          {doc.email && <a href={`mailto:${doc.email}`} className="text-primary hover:underline inline-flex items-center gap-1"><Mail className="h-3 w-3" />{doc.email}</a>}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {staff.length > 0 && (
+              <div className="rounded-2xl border border-border bg-card p-6 shadow-soft">
+                <h2 className="font-semibold text-lg flex items-center gap-2"><UsersIcon className="h-5 w-5 text-primary" /> {t("staff")}</h2>
+                <ul className="mt-3 divide-y divide-border">
+                  {staff.map((s) => (
+                    <li key={s.id} className="py-3 flex flex-wrap items-center justify-between gap-3">
+                      <div>
+                        <div className="font-medium">{s.name}</div>
+                        {s.role_title && <div className="text-xs text-muted-foreground">{s.role_title}</div>}
+                      </div>
+                      <div className="flex gap-3 text-xs">
+                        {s.phone && <a href={`tel:${s.phone}`} className="text-primary hover:underline inline-flex items-center gap-1"><Phone className="h-3 w-3" />{s.phone}</a>}
+                        {s.email && <a href={`mailto:${s.email}`} className="text-primary hover:underline inline-flex items-center gap-1"><Mail className="h-3 w-3" />{s.email}</a>}
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
 
             <HospitalReviews hospitalId={hospital.id} />
           </div>
