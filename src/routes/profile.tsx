@@ -66,9 +66,9 @@ function ProfilePage() {
     const name = displayNameSchema.safeParse(displayName);
     if (!name.success) return toast.error("Please enter your full name.");
     const uname = usernameSchema.safeParse(username);
-    if (!uname.success) return toast.error(uname.error.errors[0].message);
+    if (!uname.success) return toast.error(uname.error.issues[0].message);
     const ph = phoneSchema.safeParse(phone);
-    if (!ph.success) return toast.error(ph.error.errors[0].message);
+    if (!ph.success) return toast.error(ph.error.issues[0].message);
     const ad = addressSchema.safeParse(address);
     if (!ad.success) return toast.error("Address is too long.");
 

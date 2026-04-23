@@ -56,7 +56,7 @@ function AuthPage() {
     try {
       if (mode === "verify") {
         const otpParsed = otpSchema.safeParse(otp);
-        if (!otpParsed.success) return toast.error(otpParsed.error.errors[0].message);
+        if (!otpParsed.success) return toast.error(otpParsed.error.issues[0].message);
         const { error } = await verifyEmailOtp(email, otpParsed.data);
         if (error) return toast.error(error);
         toast.success("Email verified! You're signed in.");
@@ -73,9 +73,9 @@ function AuthPage() {
         const nameParsed = nameSchema.safeParse(displayName);
         if (!nameParsed.success) return toast.error("Please enter your full name.");
         const userParsed = usernameSchema.safeParse(username);
-        if (!userParsed.success) return toast.error(userParsed.error.errors[0].message);
+        if (!userParsed.success) return toast.error(userParsed.error.issues[0].message);
         const phoneParsed = phoneSchema.safeParse(phone);
-        if (!phoneParsed.success) return toast.error(phoneParsed.error.errors[0].message);
+        if (!phoneParsed.success) return toast.error(phoneParsed.error.issues[0].message);
 
         const { error, needsOtp } = await signUp(emailParsed.data, pwParsed.data, {
           displayName: nameParsed.data,

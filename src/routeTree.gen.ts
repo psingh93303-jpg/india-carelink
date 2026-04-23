@@ -11,7 +11,10 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SymptomSearchRouteImport } from './routes/symptom-search'
 import { Route as SearchRouteImport } from './routes/search'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as LabsRouteImport } from './routes/labs'
+import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as EmergencyRouteImport } from './routes/emergency'
 import { Route as DisclaimerRouteImport } from './routes/disclaimer'
 import { Route as ContactRouteImport } from './routes/contact'
@@ -40,9 +43,24 @@ const SearchRoute = SearchRouteImport.update({
   path: '/search',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProfileRoute = ProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LabsRoute = LabsRouteImport.update({
   id: '/labs',
   path: '/labs',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
+  id: '/forgot-password',
+  path: '/forgot-password',
   getParentRoute: () => rootRouteImport,
 } as any)
 const EmergencyRoute = EmergencyRouteImport.update({
@@ -139,7 +157,10 @@ export interface FileRoutesByFullPath {
   '/contact': typeof ContactRoute
   '/disclaimer': typeof DisclaimerRoute
   '/emergency': typeof EmergencyRoute
+  '/forgot-password': typeof ForgotPasswordRoute
   '/labs': typeof LabsRoute
+  '/profile': typeof ProfileRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/search': typeof SearchRoute
   '/symptom-search': typeof SymptomSearchRoute
   '/admin/forbidden': typeof AdminForbiddenRoute
@@ -160,7 +181,10 @@ export interface FileRoutesByTo {
   '/contact': typeof ContactRoute
   '/disclaimer': typeof DisclaimerRoute
   '/emergency': typeof EmergencyRoute
+  '/forgot-password': typeof ForgotPasswordRoute
   '/labs': typeof LabsRoute
+  '/profile': typeof ProfileRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/search': typeof SearchRoute
   '/symptom-search': typeof SymptomSearchRoute
   '/admin/forbidden': typeof AdminForbiddenRoute
@@ -183,7 +207,10 @@ export interface FileRoutesById {
   '/contact': typeof ContactRoute
   '/disclaimer': typeof DisclaimerRoute
   '/emergency': typeof EmergencyRoute
+  '/forgot-password': typeof ForgotPasswordRoute
   '/labs': typeof LabsRoute
+  '/profile': typeof ProfileRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/search': typeof SearchRoute
   '/symptom-search': typeof SymptomSearchRoute
   '/admin/forbidden': typeof AdminForbiddenRoute
@@ -207,7 +234,10 @@ export interface FileRouteTypes {
     | '/contact'
     | '/disclaimer'
     | '/emergency'
+    | '/forgot-password'
     | '/labs'
+    | '/profile'
+    | '/reset-password'
     | '/search'
     | '/symptom-search'
     | '/admin/forbidden'
@@ -228,7 +258,10 @@ export interface FileRouteTypes {
     | '/contact'
     | '/disclaimer'
     | '/emergency'
+    | '/forgot-password'
     | '/labs'
+    | '/profile'
+    | '/reset-password'
     | '/search'
     | '/symptom-search'
     | '/admin/forbidden'
@@ -250,7 +283,10 @@ export interface FileRouteTypes {
     | '/contact'
     | '/disclaimer'
     | '/emergency'
+    | '/forgot-password'
     | '/labs'
+    | '/profile'
+    | '/reset-password'
     | '/search'
     | '/symptom-search'
     | '/admin/forbidden'
@@ -273,7 +309,10 @@ export interface RootRouteChildren {
   ContactRoute: typeof ContactRoute
   DisclaimerRoute: typeof DisclaimerRoute
   EmergencyRoute: typeof EmergencyRoute
+  ForgotPasswordRoute: typeof ForgotPasswordRoute
   LabsRoute: typeof LabsRoute
+  ProfileRoute: typeof ProfileRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
   SearchRoute: typeof SearchRoute
   SymptomSearchRoute: typeof SymptomSearchRoute
   HospitalIdRoute: typeof HospitalIdRoute
@@ -295,11 +334,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SearchRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/profile': {
+      id: '/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof ProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/labs': {
       id: '/labs'
       path: '/labs'
       fullPath: '/labs'
       preLoaderRoute: typeof LabsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/forgot-password': {
+      id: '/forgot-password'
+      path: '/forgot-password'
+      fullPath: '/forgot-password'
+      preLoaderRoute: typeof ForgotPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/emergency': {
@@ -458,7 +518,10 @@ const rootRouteChildren: RootRouteChildren = {
   ContactRoute: ContactRoute,
   DisclaimerRoute: DisclaimerRoute,
   EmergencyRoute: EmergencyRoute,
+  ForgotPasswordRoute: ForgotPasswordRoute,
   LabsRoute: LabsRoute,
+  ProfileRoute: ProfileRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
   SearchRoute: SearchRoute,
   SymptomSearchRoute: SymptomSearchRoute,
   HospitalIdRoute: HospitalIdRoute,
