@@ -78,6 +78,9 @@ export function Header() {
               <DropdownMenuContent align="end" className="w-56">
                 <div className="px-2 py-1.5 text-xs text-muted-foreground truncate">{user.email}</div>
                 <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                  <Link to="/profile"><UserIcon className="h-4 w-4" /> My profile</Link>
+                </DropdownMenuItem>
                 {isAdmin && (
                   <DropdownMenuItem asChild>
                     <Link to="/admin"><Shield className="h-4 w-4" /> Admin portal</Link>

@@ -1,9 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
-import { Loader2, Shield } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { Loader2, Shield, Search } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { useAuth, ROLE_LABELS, type AppRole } from "@/lib/auth";
 
@@ -16,7 +17,10 @@ const ASSIGNABLE_ROLES: AppRole[] = ["admin", "manager", "hospital_manager", "fi
 
 type UserRow = {
   user_id: string;
+  email: string | null;
   display_name: string | null;
+  username: string | null;
+  phone: string | null;
   created_at: string;
   roles: Set<AppRole>;
 };
@@ -25,26 +29,25 @@ function AdminUsers() {
   const { user } = useAuth();
   const [rows, setRows] = useState<UserRow[] | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
+  const [query, setQuery] = useState("");
 
   const load = async () => {
     setRows(null);
-    const [{ data: profs, error }, { data: roles }] = await Promise.all([
-      supabase.from("profiles").select("user_id,display_name,created_at").order("created_at", { ascending: false }),
-      supabase.from("user_roles").select("user_id,role"),
-    ]);
-    if (error) return toast.error(error.message);
-    const map = new Map<string, Set<AppRole>>();
-    for (const r of roles ?? []) {
-      const set = map.get(r.user_id) ?? new Set<AppRole>();
-      set.add(r.role as AppRole);
-      map.set(r.user_id, set);
+    const { data, error } = await supabase.rpc("admin_list_users");
+    if (error) {
+      toast.error(error.message);
+      setRows([]);
+      return;
     }
     setRows(
-      (profs ?? []).map((p) => ({
-        user_id: p.user_id,
-        display_name: p.display_name,
-        created_at: p.created_at,
-        roles: map.get(p.user_id) ?? new Set<AppRole>(),
+      (data ?? []).map((r) => ({
+        user_id: r.user_id,
+        email: r.email,
+        display_name: r.display_name,
+        username: r.username,
+        phone: r.phone,
+        created_at: r.created_at,
+        roles: new Set((r.roles ?? []).filter((x): x is AppRole => x !== "user") as AppRole[]),
       })),
     );
   };
@@ -77,40 +80,66 @@ function AdminUsers() {
     load();
   };
 
+  const filtered = useMemo(() => {
+    if (!rows) return null;
+    const q = query.trim().toLowerCase();
+    if (!q) return rows;
+    return rows.filter((r) =>
+      [r.email, r.display_name, r.username, r.phone].some((v) => v?.toLowerCase().includes(q)),
+    );
+  }, [rows, query]);
+
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight">Users</h1>
-        <p className="mt-1 text-sm text-muted-foreground">Assign roles to control admin portal access.</p>
+      <div className="flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">Users</h1>
+          <p className="mt-1 text-sm text-muted-foreground">{rows ? `${rows.length} registered users` : "Loading…"}</p>
+        </div>
+        <div className="relative w-full max-w-xs">
+          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <Input
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Search name, email, phone…"
+            className="pl-9"
+          />
+        </div>
       </div>
 
       <div className="rounded-2xl border border-border bg-card shadow-soft overflow-hidden">
-        {!rows ? (
+        {!filtered ? (
           <div className="flex h-40 items-center justify-center"><Loader2 className="h-5 w-5 animate-spin text-muted-foreground" /></div>
-        ) : rows.length === 0 ? (
-          <div className="p-12 text-center text-sm text-muted-foreground">No users yet.</div>
+        ) : filtered.length === 0 ? (
+          <div className="p-12 text-center text-sm text-muted-foreground">No users match.</div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead className="bg-muted/50 text-xs uppercase text-muted-foreground">
                 <tr>
-                  <th className="text-left p-3 font-medium">Name</th>
+                  <th className="text-left p-3 font-medium">User</th>
+                  <th className="text-left p-3 font-medium">Contact</th>
                   <th className="text-left p-3 font-medium">Joined</th>
                   {ASSIGNABLE_ROLES.map((r) => (
-                    <th key={r} className="text-left p-3 font-medium">{ROLE_LABELS[r]}</th>
+                    <th key={r} className="text-left p-3 font-medium whitespace-nowrap">{ROLE_LABELS[r]}</th>
                   ))}
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
-                {rows.map((r) => (
+                {filtered.map((r) => (
                   <tr key={r.user_id} className="hover:bg-muted/30">
                     <td className="p-3">
                       <div className="font-medium flex items-center gap-2">
                         {r.display_name ?? "—"}
                         {r.user_id === user?.id && <span className="text-xs text-muted-foreground">(you)</span>}
                       </div>
+                      {r.username && <div className="text-xs text-muted-foreground">@{r.username}</div>}
                     </td>
-                    <td className="p-3 text-muted-foreground">{new Date(r.created_at).toLocaleDateString()}</td>
+                    <td className="p-3">
+                      <div className="text-xs">{r.email ?? "—"}</div>
+                      {r.phone && <div className="text-xs text-muted-foreground">{r.phone}</div>}
+                    </td>
+                    <td className="p-3 text-muted-foreground whitespace-nowrap">{new Date(r.created_at).toLocaleDateString()}</td>
                     {ASSIGNABLE_ROLES.map((role) => {
                       const has = r.roles.has(role);
                       const key = `${r.user_id}:${role}`;
