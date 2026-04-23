@@ -184,6 +184,7 @@ export type Database = {
           icu: boolean
           id: string
           image: string
+          is_verified: boolean
           lat: number
           lng: number
           name: string
@@ -194,6 +195,8 @@ export type Database = {
           reviews_count: number
           specialties: string[]
           updated_at: string
+          verified_at: string | null
+          verified_by: string | null
         }
         Insert: {
           about?: string
@@ -207,6 +210,7 @@ export type Database = {
           icu?: boolean
           id?: string
           image?: string
+          is_verified?: boolean
           lat: number
           lng: number
           name: string
@@ -217,6 +221,8 @@ export type Database = {
           reviews_count?: number
           specialties?: string[]
           updated_at?: string
+          verified_at?: string | null
+          verified_by?: string | null
         }
         Update: {
           about?: string
@@ -230,6 +236,7 @@ export type Database = {
           icu?: boolean
           id?: string
           image?: string
+          is_verified?: boolean
           lat?: number
           lng?: number
           name?: string
@@ -240,6 +247,8 @@ export type Database = {
           reviews_count?: number
           specialties?: string[]
           updated_at?: string
+          verified_at?: string | null
+          verified_by?: string | null
         }
         Relationships: []
       }
@@ -256,6 +265,7 @@ export type Database = {
           home_collection: boolean
           id: string
           image: string
+          is_verified: boolean
           lat: number
           lng: number
           name: string
@@ -265,6 +275,8 @@ export type Database = {
           rating: number
           tests: string[]
           updated_at: string
+          verified_at: string | null
+          verified_by: string | null
         }
         Insert: {
           about?: string
@@ -278,6 +290,7 @@ export type Database = {
           home_collection?: boolean
           id?: string
           image?: string
+          is_verified?: boolean
           lat: number
           lng: number
           name: string
@@ -287,6 +300,8 @@ export type Database = {
           rating?: number
           tests?: string[]
           updated_at?: string
+          verified_at?: string | null
+          verified_by?: string | null
         }
         Update: {
           about?: string
@@ -300,6 +315,7 @@ export type Database = {
           home_collection?: boolean
           id?: string
           image?: string
+          is_verified?: boolean
           lat?: number
           lng?: number
           name?: string
@@ -309,6 +325,8 @@ export type Database = {
           rating?: number
           tests?: string[]
           updated_at?: string
+          verified_at?: string | null
+          verified_by?: string | null
         }
         Relationships: []
       }
@@ -587,6 +605,7 @@ export type Database = {
         | "manager"
         | "hospital_manager"
         | "financial_manager"
+        | "human_resource_manager"
       review_status: "pending" | "approved" | "rejected"
     }
     CompositeTypes: {
@@ -721,6 +740,7 @@ export const Constants = {
         "manager",
         "hospital_manager",
         "financial_manager",
+        "human_resource_manager",
       ],
       review_status: ["pending", "approved", "rejected"],
     },
