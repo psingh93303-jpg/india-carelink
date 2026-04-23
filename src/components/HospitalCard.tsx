@@ -4,6 +4,7 @@ import type { Hospital } from "@/data/hospitals";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useI18n } from "@/lib/i18n";
+import { VerifiedBadge } from "@/components/VerifiedBadge";
 
 export function HospitalCard({ hospital, distanceKm }: { hospital: Hospital; distanceKm?: number }) {
   const { t } = useI18n();
@@ -30,7 +31,10 @@ export function HospitalCard({ hospital, distanceKm }: { hospital: Hospital; dis
 
       <div className="flex flex-1 flex-col p-4">
         <div className="flex items-start justify-between gap-2">
-          <h3 className="font-semibold text-base leading-snug line-clamp-2">{hospital.name}</h3>
+          <h3 className="font-semibold text-base leading-snug line-clamp-2 flex-1 min-w-0">
+            <span className="line-clamp-2">{hospital.name}</span>
+            {hospital.isVerified && <VerifiedBadge size="sm" className="ml-1 align-middle inline-flex" />}
+          </h3>
           <div className="flex shrink-0 items-center gap-1 rounded-md bg-success/10 px-2 py-1 text-xs font-semibold text-success">
             <Star className="h-3 w-3 fill-current" />
             {hospital.rating.toFixed(1)}
