@@ -73,24 +73,18 @@ function AuthPage() {
         const nameParsed = nameSchema.safeParse(displayName);
         if (!nameParsed.success) return toast.error("Please enter your full name.");
         const userParsed = usernameSchema.safeParse(username);
-        if (!userParsed.success) return toast.error(userParsed.error.issues[0].message);
+        if (!userParsed.success) return toast.error(userParsed.error.issues[0]?.message ?? "Invalid username");
         const phoneParsed = phoneSchema.safeParse(phone);
-        if (!phoneParsed.success) return toast.error(phoneParsed.error.issues[0].message);
+        if (!phoneParsed.success) return toast.error(phoneParsed.error.issues[0]?.message ?? "Invalid phone");
 
-        const { error, needsOtp } = await signUp(emailParsed.data, pwParsed.data, {
+        const { error } = await signUp(emailParsed.data, pwParsed.data, {
           displayName: nameParsed.data,
           username: userParsed.data,
           phone: phoneParsed.data,
         });
         if (error) return toast.error(error);
-        if (needsOtp) {
-          toast.success("We sent a 6-digit code to your email.");
-          setMode("verify");
-          setOtp("");
-        } else {
-          toast.success("Account created!");
-          navigate({ to: search.redirect ?? "/" });
-        }
+        toast.success("Account created! You're signed in.");
+        navigate({ to: search.redirect ?? "/" });
       } else {
         const { error } = await signIn(emailParsed.data, pwParsed.data);
         if (error) return toast.error(error);
