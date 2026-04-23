@@ -314,28 +314,37 @@ export type Database = {
       }
       profiles: {
         Row: {
+          address: string | null
           avatar_url: string | null
           created_at: string
           display_name: string | null
           id: string
+          phone: string | null
           updated_at: string
           user_id: string
+          username: string | null
         }
         Insert: {
+          address?: string | null
           avatar_url?: string | null
           created_at?: string
           display_name?: string | null
           id?: string
+          phone?: string | null
           updated_at?: string
           user_id: string
+          username?: string | null
         }
         Update: {
+          address?: string | null
           avatar_url?: string | null
           created_at?: string
           display_name?: string | null
           id?: string
+          phone?: string | null
           updated_at?: string
           user_id?: string
+          username?: string | null
         }
         Relationships: []
       }
@@ -541,6 +550,19 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      admin_list_users: {
+        Args: never
+        Returns: {
+          address: string
+          created_at: string
+          display_name: string
+          email: string
+          phone: string
+          roles: string[]
+          user_id: string
+          username: string
+        }[]
+      }
       can_edit_hospital: { Args: { _user_id: string }; Returns: boolean }
       get_reviewer_names: {
         Args: { _user_ids: string[] }

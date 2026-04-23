@@ -7,6 +7,8 @@ export type AppRole = "admin" | "manager" | "hospital_manager" | "financial_mana
 const STAFF_ROLES: AppRole[] = ["admin", "manager", "hospital_manager", "financial_manager"];
 const HOSPITAL_EDIT_ROLES: AppRole[] = ["admin", "manager", "hospital_manager"];
 
+type SignUpExtras = { displayName: string; username?: string; phone?: string };
+
 type Ctx = {
   session: Session | null;
   user: User | null;
@@ -18,7 +20,11 @@ type Ctx = {
   canManageFinance: boolean;
   loading: boolean;
   signIn: (email: string, password: string) => Promise<{ error: string | null }>;
-  signUp: (email: string, password: string, displayName: string) => Promise<{ error: string | null }>;
+  signUp: (email: string, password: string, extras: SignUpExtras) => Promise<{ error: string | null; needsOtp: boolean }>;
+  verifyEmailOtp: (email: string, token: string) => Promise<{ error: string | null }>;
+  resendSignupOtp: (email: string) => Promise<{ error: string | null }>;
+  sendPasswordReset: (email: string) => Promise<{ error: string | null }>;
+  updatePassword: (password: string) => Promise<{ error: string | null }>;
   signOut: () => Promise<void>;
 };
 
@@ -64,15 +70,44 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return { error: error?.message ?? null };
   };
 
-  const signUp = async (email: string, password: string, displayName: string) => {
-    const { error } = await supabase.auth.signUp({
+  const signUp = async (email: string, password: string, extras: SignUpExtras) => {
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
         emailRedirectTo: `${window.location.origin}/`,
-        data: { display_name: displayName },
+        data: {
+          display_name: extras.displayName,
+          username: extras.username ?? "",
+          phone: extras.phone ?? "",
+        },
       },
     });
+    if (error) return { error: error.message, needsOtp: false };
+    // Session is null when email confirmation is required → OTP step
+    const needsOtp = !data.session;
+    return { error: null, needsOtp };
+  };
+
+  const verifyEmailOtp = async (email: string, token: string) => {
+    const { error } = await supabase.auth.verifyOtp({ email, token, type: "signup" });
+    return { error: error?.message ?? null };
+  };
+
+  const resendSignupOtp = async (email: string) => {
+    const { error } = await supabase.auth.resend({ type: "signup", email });
+    return { error: error?.message ?? null };
+  };
+
+  const sendPasswordReset = async (email: string) => {
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/reset-password`,
+    });
+    return { error: error?.message ?? null };
+  };
+
+  const updatePassword = async (password: string) => {
+    const { error } = await supabase.auth.updateUser({ password });
     return { error: error?.message ?? null };
   };
 
@@ -100,6 +135,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         loading,
         signIn,
         signUp,
+        verifyEmailOtp,
+        resendSignupOtp,
+        sendPasswordReset,
+        updatePassword,
         signOut,
       }}
     >
