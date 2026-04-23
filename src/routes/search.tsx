@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { zodValidator, fallback } from "@tanstack/zod-adapter";
 import { z } from "zod";
-import { Search, SlidersHorizontal, X, Crosshair, Loader2 } from "lucide-react";
+import { Search, SlidersHorizontal, X, Crosshair, Loader2, ShieldCheck } from "lucide-react";
 import { useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -22,6 +22,7 @@ const searchSchema = z.object({
   icu: fallback(z.boolean(), false).default(false),
   ambulance: fallback(z.boolean(), false).default(false),
   open24_7: fallback(z.boolean(), false).default(false),
+  verified: fallback(z.boolean(), false).default(false),
   minRating: fallback(z.number(), 0).default(0),
 });
 
@@ -56,6 +57,7 @@ function SearchPage() {
       if (search.icu && !h.icu) return false;
       if (search.ambulance && !h.ambulance) return false;
       if (search.open24_7 && !h.open24_7) return false;
+      if (search.verified && !h.isVerified) return false;
       if (search.minRating > 0 && h.rating < search.minRating) return false;
       return true;
     });
@@ -64,17 +66,16 @@ function SearchPage() {
         .map((h) => ({ h, d: distanceKm(geo.loc!, h) }))
         .sort((a, b) => a.d - b.d);
     }
-    return list
-      .sort((a, b) => Number(b.featured ?? false) - Number(a.featured ?? false) || b.rating - a.rating)
-      .map((h) => ({ h, d: undefined as number | undefined }));
+    // already ranked by useHospitals (verified → rating → reviews → completeness)
+    return list.map((h) => ({ h, d: undefined as number | undefined }));
   }, [search, HOSPITALS, geo.loc]);
 
   const activeFiltersCount = [
-    search.city, search.specialty, search.emergency, search.icu, search.ambulance, search.open24_7, search.minRating > 0,
+    search.city, search.specialty, search.emergency, search.icu, search.ambulance, search.open24_7, search.verified, search.minRating > 0,
   ].filter(Boolean).length;
 
   const clearAll = () =>
-    navigate({ search: { q: "", city: "", specialty: "", emergency: false, icu: false, ambulance: false, open24_7: false, minRating: 0 } });
+    navigate({ search: { q: "", city: "", specialty: "", emergency: false, icu: false, ambulance: false, open24_7: false, verified: false, minRating: 0 } });
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -116,13 +117,16 @@ function SearchPage() {
 
               <div className="space-y-3 pt-1">
                 {[
+                  { key: "verified", label: "Verified only", icon: <ShieldCheck className="h-3.5 w-3.5 text-primary" /> },
                   { key: "open24_7", label: t("filter_24_7") },
                   { key: "emergency", label: t("filter_emergency") },
                   { key: "icu", label: t("filter_icu") },
                   { key: "ambulance", label: t("filter_ambulance") },
                 ].map((f) => (
                   <div key={f.key} className="flex items-center justify-between">
-                    <Label htmlFor={f.key} className="text-sm font-normal cursor-pointer">{f.label}</Label>
+                    <Label htmlFor={f.key} className="text-sm font-normal cursor-pointer flex items-center gap-1.5">
+                      {f.icon}{f.label}
+                    </Label>
                     <Switch
                       id={f.key}
                       checked={Boolean(search[f.key as keyof typeof search])}
