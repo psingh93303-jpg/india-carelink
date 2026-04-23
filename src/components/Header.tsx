@@ -10,9 +10,18 @@ import { cn } from "@/lib/utils";
 
 export function Header() {
   const { t, lang, setLang } = useI18n();
-  const { user, isAdmin, signOut } = useAuth();
+  const { user, isAdmin, isStaff, signOut } = useAuth();
   const { location } = useRouterState();
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  if (typeof window !== "undefined") {
+    window.addEventListener(
+      "scroll",
+      () => setScrolled(window.scrollY > 8),
+      { passive: true, once: false },
+    );
+  }
 
   const links = [
     { to: "/", label: t("nav_home") },
@@ -24,17 +33,26 @@ export function Header() {
     { to: "/contact", label: t("nav_contact") },
   ] as const;
 
+  const initials = user?.email?.slice(0, 2).toUpperCase() ?? "U";
+
   return (
-    <header className="sticky top-0 z-40 border-b border-border/60 bg-background/80 backdrop-blur-lg">
-      <div className="container mx-auto flex h-16 items-center justify-between gap-4 px-4">
-        <Link to="/" className="flex items-center gap-2 group">
+    <header
+      className={cn(
+        "sticky top-0 z-40 border-b bg-background/80 backdrop-blur-lg transition-shadow",
+        scrolled ? "border-border shadow-soft" : "border-border/60",
+      )}
+    >
+      <div className="container mx-auto flex h-16 items-center gap-2 px-3 sm:px-4">
+        {/* Left: logo */}
+        <Link to="/" className="flex items-center gap-2 group shrink-0">
           <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-hero text-primary-foreground shadow-elegant transition-transform group-hover:scale-105">
             <Activity className="h-5 w-5" strokeWidth={2.5} />
           </span>
-          <span className="font-bold text-lg tracking-tight">{t("brand")}</span>
+          <span className="font-bold text-base sm:text-lg tracking-tight whitespace-nowrap">{t("brand")}</span>
         </Link>
 
-        <nav className="hidden md:flex items-center gap-1">
+        {/* Center: desktop nav */}
+        <nav className="hidden lg:flex items-center gap-1 mx-auto min-w-0">
           {links.map((l) => {
             const active = location.pathname === l.to || (l.to !== "/" && location.pathname.startsWith(l.to));
             return (
@@ -42,7 +60,7 @@ export function Header() {
                 key={l.to}
                 to={l.to}
                 className={cn(
-                  "px-3 py-2 rounded-lg text-sm font-medium transition-colors",
+                  "px-3 py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap",
                   active ? "bg-secondary text-foreground" : "text-muted-foreground hover:text-foreground hover:bg-secondary/60",
                 )}
               >
@@ -52,10 +70,11 @@ export function Header() {
           })}
         </nav>
 
-        <div className="flex items-center gap-2">
+        {/* Right: language + emergency + auth + hamburger */}
+        <div className="flex items-center gap-1.5 sm:gap-2 ml-auto lg:ml-0 shrink-0">
           <button
             onClick={() => setLang(lang === "en" ? "hi" : "en")}
-            className="hidden sm:inline-flex items-center gap-1.5 rounded-lg border border-border bg-background px-3 py-1.5 text-sm font-medium hover:bg-secondary transition-colors"
+            className="hidden sm:inline-flex items-center gap-1.5 rounded-lg border border-border bg-background px-2.5 py-1.5 text-xs font-medium hover:bg-secondary transition-colors"
             aria-label="Toggle language"
           >
             <Globe className="h-4 w-4" />
@@ -64,16 +83,20 @@ export function Header() {
           <Button asChild variant="emergency" size="sm" className="hidden sm:inline-flex">
             <Link to="/emergency">
               <Siren className="h-4 w-4" />
-              {t("nav_emergency")}
+              <span className="hidden md:inline">{t("nav_emergency")}</span>
             </Link>
           </Button>
 
+          {/* Auth — ALWAYS visible on every breakpoint */}
           {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" aria-label="Account">
-                  <UserIcon className="h-5 w-5" />
-                </Button>
+                <button
+                  aria-label="Account"
+                  className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-hero text-primary-foreground text-xs font-semibold shadow-soft hover:opacity-90 transition-opacity"
+                >
+                  {initials}
+                </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56">
                 <div className="px-2 py-1.5 text-xs text-muted-foreground truncate">{user.email}</div>
@@ -81,7 +104,7 @@ export function Header() {
                 <DropdownMenuItem asChild>
                   <Link to="/profile"><UserIcon className="h-4 w-4" /> My profile</Link>
                 </DropdownMenuItem>
-                {isAdmin && (
+                {(isAdmin || isStaff) && (
                   <DropdownMenuItem asChild>
                     <Link to="/admin"><Shield className="h-4 w-4" /> Admin portal</Link>
                   </DropdownMenuItem>
@@ -92,14 +115,18 @@ export function Header() {
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <Button asChild variant="ghost" size="sm" className="hidden sm:inline-flex">
-              <Link to="/auth"><LogIn className="h-4 w-4" /> Sign in</Link>
+            <Button asChild size="sm" variant="default">
+              <Link to="/auth">
+                <LogIn className="h-4 w-4" />
+                <span className="hidden xs:inline sm:inline">Sign in</span>
+              </Link>
             </Button>
           )}
 
+          {/* Mobile hamburger — does NOT contain Login (login stays in header) */}
           <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="md:hidden" aria-label="Open menu">
+              <Button variant="ghost" size="icon" className="lg:hidden" aria-label="Open menu">
                 <Menu className="h-5 w-5" />
               </Button>
             </SheetTrigger>
@@ -123,6 +150,14 @@ export function Header() {
                   <Globe className="h-4 w-4" />
                   {lang === "en" ? "हिंदी" : "English"}
                 </button>
+                <Link
+                  to="/emergency"
+                  onClick={() => setOpen(false)}
+                  className="mt-2 flex items-center justify-center gap-2 rounded-lg bg-emergency px-3 py-3 text-base font-semibold text-emergency-foreground"
+                >
+                  <Siren className="h-4 w-4" />
+                  {t("nav_emergency")}
+                </Link>
               </div>
             </SheetContent>
           </Sheet>
