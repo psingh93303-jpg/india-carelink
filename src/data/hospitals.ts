@@ -32,7 +32,22 @@ export type Hospital = {
   about: string;
   image: string;
   featured?: boolean;
+  isVerified?: boolean;
 };
+
+/** Smart ranking: verified → rating → reviews → profile completeness */
+export function rankHospitals<T extends { isVerified?: boolean; rating: number; reviews: number; about?: string; image?: string; specialties?: string[]; phone?: string; featured?: boolean }>(list: T[]): T[] {
+  const completeness = (h: T) =>
+    [h.about, h.image, h.specialties?.length, h.phone].filter(Boolean).length;
+  return [...list].sort((a, b) => {
+    const va = a.isVerified ? 1 : 0;
+    const vb = b.isVerified ? 1 : 0;
+    if (vb !== va) return vb - va;
+    if (b.rating !== a.rating) return b.rating - a.rating;
+    if (b.reviews !== a.reviews) return b.reviews - a.reviews;
+    return completeness(b) - completeness(a);
+  });
+}
 
 export const CITIES = [
   "Lucknow",

@@ -20,6 +20,7 @@ export type Lab = {
   image: string;
   rating: number;
   featured: boolean;
+  is_verified: boolean;
 };
 
 export function useLabs() {
