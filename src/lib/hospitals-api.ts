@@ -21,6 +21,7 @@ type Row = {
   about: string;
   image: string;
   featured: boolean;
+  is_verified?: boolean;
 };
 
 export function rowToHospital(r: Row): Hospital {
@@ -44,6 +45,7 @@ export function rowToHospital(r: Row): Hospital {
     about: r.about,
     image: r.image,
     featured: r.featured,
+    isVerified: Boolean(r.is_verified),
   };
 }
 

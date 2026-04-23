@@ -6,6 +6,7 @@ import { useI18n } from "@/lib/i18n";
 import { fetchHospitalById } from "@/lib/hospitals-api";
 import { MapView } from "@/components/MapView";
 import { HospitalReviews } from "@/components/HospitalReviews";
+import { VerifiedBadge } from "@/components/VerifiedBadge";
 import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/hospital/$id")({
@@ -75,7 +76,10 @@ function HospitalPage() {
             <div className="rounded-2xl border border-border bg-card p-6 shadow-elegant">
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
-                  <h1 className="text-2xl md:text-3xl font-bold tracking-tight">{hospital.name}</h1>
+                  <h1 className="text-2xl md:text-3xl font-bold tracking-tight flex items-center gap-2 flex-wrap">
+                    <span>{hospital.name}</span>
+                    {hospital.isVerified && <VerifiedBadge size="lg" />}
+                  </h1>
                   <p className="mt-1 flex items-center gap-1.5 text-sm text-muted-foreground">
                     <MapPin className="h-4 w-4" /> {hospital.address}
                   </p>

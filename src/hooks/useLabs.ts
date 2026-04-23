@@ -20,6 +20,7 @@ export type Lab = {
   image: string;
   rating: number;
   featured: boolean;
+  is_verified: boolean;
 };
 
 export function useLabs() {
@@ -32,6 +33,7 @@ export function useLabs() {
     supabase
       .from("pathology_labs")
       .select("*")
+      .order("is_verified", { ascending: false })
       .order("featured", { ascending: false })
       .order("rating", { ascending: false })
       .then(({ data, error }) => {

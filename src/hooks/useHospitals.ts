@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import type { Hospital } from "@/data/hospitals";
+import { type Hospital, rankHospitals } from "@/data/hospitals";
 import { fetchAllHospitals } from "@/lib/hospitals-api";
 
 export function useHospitals() {
@@ -11,7 +11,7 @@ export function useHospitals() {
     let cancelled = false;
     fetchAllHospitals()
       .then((data) => {
-        if (!cancelled) setHospitals(data);
+        if (!cancelled) setHospitals(rankHospitals(data));
       })
       .catch((e) => {
         if (!cancelled) setError(e instanceof Error ? e.message : "Failed to load hospitals");
