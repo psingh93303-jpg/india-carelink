@@ -32,6 +32,7 @@ import { Route as HospitalIdRouteImport } from './routes/hospital.$id'
 import { Route as AdminUsersRouteImport } from './routes/admin.users'
 import { Route as AdminSiteRouteImport } from './routes/admin.site'
 import { Route as AdminReviewsRouteImport } from './routes/admin.reviews'
+import { Route as AdminPagesRouteImport } from './routes/admin.pages'
 import { Route as AdminLinksRouteImport } from './routes/admin.links'
 import { Route as AdminLabsRouteImport } from './routes/admin.labs'
 import { Route as AdminHospitalsRouteImport } from './routes/admin.hospitals'
@@ -153,6 +154,11 @@ const AdminReviewsRoute = AdminReviewsRouteImport.update({
   path: '/reviews',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminPagesRoute = AdminPagesRouteImport.update({
+  id: '/pages',
+  path: '/pages',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminLinksRoute = AdminLinksRouteImport.update({
   id: '/links',
   path: '/links',
@@ -202,6 +208,7 @@ export interface FileRoutesByFullPath {
   '/admin/hospitals': typeof AdminHospitalsRoute
   '/admin/labs': typeof AdminLabsRoute
   '/admin/links': typeof AdminLinksRoute
+  '/admin/pages': typeof AdminPagesRoute
   '/admin/reviews': typeof AdminReviewsRoute
   '/admin/site': typeof AdminSiteRoute
   '/admin/users': typeof AdminUsersRoute
@@ -231,6 +238,7 @@ export interface FileRoutesByTo {
   '/admin/hospitals': typeof AdminHospitalsRoute
   '/admin/labs': typeof AdminLabsRoute
   '/admin/links': typeof AdminLinksRoute
+  '/admin/pages': typeof AdminPagesRoute
   '/admin/reviews': typeof AdminReviewsRoute
   '/admin/site': typeof AdminSiteRoute
   '/admin/users': typeof AdminUsersRoute
@@ -262,6 +270,7 @@ export interface FileRoutesById {
   '/admin/hospitals': typeof AdminHospitalsRoute
   '/admin/labs': typeof AdminLabsRoute
   '/admin/links': typeof AdminLinksRoute
+  '/admin/pages': typeof AdminPagesRoute
   '/admin/reviews': typeof AdminReviewsRoute
   '/admin/site': typeof AdminSiteRoute
   '/admin/users': typeof AdminUsersRoute
@@ -294,6 +303,7 @@ export interface FileRouteTypes {
     | '/admin/hospitals'
     | '/admin/labs'
     | '/admin/links'
+    | '/admin/pages'
     | '/admin/reviews'
     | '/admin/site'
     | '/admin/users'
@@ -323,6 +333,7 @@ export interface FileRouteTypes {
     | '/admin/hospitals'
     | '/admin/labs'
     | '/admin/links'
+    | '/admin/pages'
     | '/admin/reviews'
     | '/admin/site'
     | '/admin/users'
@@ -353,6 +364,7 @@ export interface FileRouteTypes {
     | '/admin/hospitals'
     | '/admin/labs'
     | '/admin/links'
+    | '/admin/pages'
     | '/admin/reviews'
     | '/admin/site'
     | '/admin/users'
@@ -546,6 +558,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminReviewsRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/pages': {
+      id: '/admin/pages'
+      path: '/pages'
+      fullPath: '/admin/pages'
+      preLoaderRoute: typeof AdminPagesRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/links': {
       id: '/admin/links'
       path: '/links'
@@ -589,6 +608,7 @@ interface AdminRouteChildren {
   AdminHospitalsRoute: typeof AdminHospitalsRoute
   AdminLabsRoute: typeof AdminLabsRoute
   AdminLinksRoute: typeof AdminLinksRoute
+  AdminPagesRoute: typeof AdminPagesRoute
   AdminReviewsRoute: typeof AdminReviewsRoute
   AdminSiteRoute: typeof AdminSiteRoute
   AdminUsersRoute: typeof AdminUsersRoute
@@ -601,6 +621,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminHospitalsRoute: AdminHospitalsRoute,
   AdminLabsRoute: AdminLabsRoute,
   AdminLinksRoute: AdminLinksRoute,
+  AdminPagesRoute: AdminPagesRoute,
   AdminReviewsRoute: AdminReviewsRoute,
   AdminSiteRoute: AdminSiteRoute,
   AdminUsersRoute: AdminUsersRoute,
