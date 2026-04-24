@@ -2,10 +2,23 @@ import { createContext, useContext, useEffect, useState, type ReactNode } from "
 import type { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 
-export type AppRole = "admin" | "manager" | "hospital_manager" | "financial_manager" | "user";
+export type AppRole = "admin" | "manager" | "hospital_manager" | "financial_manager" | "human_resource_manager" | "user";
 
-const STAFF_ROLES: AppRole[] = ["admin", "manager", "hospital_manager", "financial_manager"];
+const STAFF_ROLES: AppRole[] = ["admin", "manager", "hospital_manager", "financial_manager", "human_resource_manager"];
 const HOSPITAL_EDIT_ROLES: AppRole[] = ["admin", "manager", "hospital_manager"];
+
+export const ROLE_DASHBOARDS: Partial<Record<AppRole, string>> = {
+  admin: "/admin-dashboard",
+  manager: "/manager-dashboard",
+  financial_manager: "/finance-dashboard",
+  hospital_manager: "/hospital-dashboard",
+  human_resource_manager: "/hr-dashboard",
+};
+
+export function getRoleDashboardPath(userRoles: AppRole[]) {
+  const priority: AppRole[] = ["admin", "manager", "financial_manager", "hospital_manager", "human_resource_manager"];
+  return ROLE_DASHBOARDS[priority.find((role) => userRoles.includes(role)) ?? "user"] ?? "/profile";
+}
 
 type SignUpExtras = { displayName: string; username?: string; phone?: string };
 
@@ -158,5 +171,6 @@ export const ROLE_LABELS: Record<AppRole, string> = {
   manager: "Manager",
   hospital_manager: "Hospital Manager",
   financial_manager: "Financial Manager",
+  human_resource_manager: "Human Resource Manager",
   user: "User",
 };

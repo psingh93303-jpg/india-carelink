@@ -3,14 +3,14 @@ import { Activity, Menu, Globe, Siren, LogIn, LogOut, Shield, User as UserIcon }
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useI18n } from "@/lib/i18n";
-import { useAuth } from "@/lib/auth";
+import { getRoleDashboardPath, useAuth } from "@/lib/auth";
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 
 export function Header() {
   const { t, lang, setLang } = useI18n();
-  const { user, isAdmin, isStaff, signOut } = useAuth();
+  const { user, roles, isStaff, signOut } = useAuth();
   const { location } = useRouterState();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -104,9 +104,9 @@ export function Header() {
                 <DropdownMenuItem asChild>
                   <Link to="/profile"><UserIcon className="h-4 w-4" /> My profile</Link>
                 </DropdownMenuItem>
-                {(isAdmin || isStaff) && (
+                {isStaff && (
                   <DropdownMenuItem asChild>
-                    <Link to="/admin"><Shield className="h-4 w-4" /> Admin portal</Link>
+                    <Link to={getRoleDashboardPath(roles)}><Shield className="h-4 w-4" /> Dashboard</Link>
                   </DropdownMenuItem>
                 )}
                 <DropdownMenuItem onClick={() => signOut()}>
