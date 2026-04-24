@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { RichTextEditor } from "@/components/RichTextEditor";
 import type { AppRole } from "@/lib/auth";
 import { ROLE_LABELS } from "@/lib/auth";
@@ -37,9 +38,23 @@ export const Route = createFileRoute("/admin/pages")({
 function AdminPages() {
   const [pages, setPages] = useState<CmsPage[]>([]);
   const [activeId, setActiveId] = useState<string | null>(null);
+  const [query, setQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState<"all" | "draft" | "published">("all");
+  const [pageIndex, setPageIndex] = useState(1);
   const [saving, setSaving] = useState(false);
 
   const active = useMemo(() => pages.find((page) => page.id === activeId) ?? pages[0], [activeId, pages]);
+  const filteredPages = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    return pages.filter((page) => {
+      const matchesQuery = !q || page.title.toLowerCase().includes(q) || page.slug.toLowerCase().includes(q);
+      const matchesStatus = statusFilter === "all" || page.status === statusFilter;
+      return matchesQuery && matchesStatus;
+    });
+  }, [pages, query, statusFilter]);
+  const pageSize = 8;
+  const pageCount = Math.max(1, Math.ceil(filteredPages.length / pageSize));
+  const visiblePages = filteredPages.slice((pageIndex - 1) * pageSize, pageIndex * pageSize);
 
   const load = async () => {
     const { data, error } = await (supabase as any).from("cms_pages").select("*").order("updated_at", { ascending: false });
@@ -60,6 +75,12 @@ function AdminPages() {
     const page: CmsPage = { id, title: "New Page", slug: `new-page-${pages.length + 1}`, content: {}, role_access: [], status: "draft" };
     setPages([page, ...pages]);
     setActiveId(id);
+  };
+
+  const updateFilters = (patch: { query?: string; status?: "all" | "draft" | "published" }) => {
+    if (patch.query !== undefined) setQuery(patch.query);
+    if (patch.status !== undefined) setStatusFilter(patch.status);
+    setPageIndex(1);
   };
 
   const savePage = async () => {
@@ -102,13 +123,36 @@ function AdminPages() {
       </div>
 
       <div className="grid gap-6 lg:grid-cols-[260px_1fr]">
-        <aside className="rounded-2xl border border-border bg-card p-3 shadow-soft">
-          {pages.length === 0 ? <p className="p-3 text-sm text-muted-foreground">No pages yet.</p> : pages.map((page) => (
-            <button key={page.id} onClick={() => setActiveId(page.id)} className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm hover:bg-secondary">
-              <FileText className="h-4 w-4 text-primary" />
-              <span className="min-w-0 flex-1 truncate">{page.title}</span>
-            </button>
-          ))}
+        <aside className="space-y-3 rounded-2xl border border-border bg-card p-3 shadow-soft">
+          <Input value={query} onChange={(e) => updateFilters({ query: e.target.value })} placeholder="Search title or slug…" />
+          <Select value={statusFilter} onValueChange={(value) => updateFilters({ status: value as "all" | "draft" | "published" })}>
+            <SelectTrigger><SelectValue /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All statuses</SelectItem>
+              <SelectItem value="published">Published</SelectItem>
+              <SelectItem value="draft">Draft</SelectItem>
+            </SelectContent>
+          </Select>
+          <div className="overflow-hidden rounded-xl border border-border">
+            {pages.length === 0 ? <p className="p-3 text-sm text-muted-foreground">No pages yet.</p> : visiblePages.length === 0 ? <p className="p-3 text-sm text-muted-foreground">No matching pages.</p> : visiblePages.map((page) => (
+              <button key={page.id} onClick={() => setActiveId(page.id)} className="flex w-full items-center gap-2 border-b border-border px-3 py-2 text-left text-sm last:border-b-0 hover:bg-secondary">
+                <FileText className="h-4 w-4 text-primary" />
+                <span className="min-w-0 flex-1">
+                  <span className="block truncate font-medium">{page.title}</span>
+                  <span className="block truncate text-xs text-muted-foreground">/{page.slug}</span>
+                </span>
+                <span className="rounded-md bg-secondary px-1.5 py-0.5 text-[10px] uppercase text-muted-foreground">{page.status}</span>
+              </button>
+            ))}
+          </div>
+          <div className="flex items-center justify-between gap-2 text-xs text-muted-foreground">
+            <span>{filteredPages.length} pages</span>
+            <div className="flex items-center gap-2">
+              <Button variant="outline" size="sm" disabled={pageIndex <= 1} onClick={() => setPageIndex((p) => Math.max(1, p - 1))}>Prev</Button>
+              <span>{pageIndex}/{pageCount}</span>
+              <Button variant="outline" size="sm" disabled={pageIndex >= pageCount} onClick={() => setPageIndex((p) => Math.min(pageCount, p + 1))}>Next</Button>
+            </div>
+          </div>
         </aside>
 
         {active && (
