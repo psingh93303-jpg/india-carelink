@@ -8,6 +8,11 @@ import { MapView } from "@/components/MapView";
 import { HospitalReviews } from "@/components/HospitalReviews";
 import { VerifiedBadge } from "@/components/VerifiedBadge";
 import { supabase } from "@/integrations/supabase/client";
+import type { Tables } from "@/integrations/supabase/types";
+
+type Department = Tables<"departments">;
+type Doctor = Tables<"doctors">;
+type HospitalStaff = Tables<"hospital_staff">;
 
 export const Route = createFileRoute("/hospital/$id")({
   loader: async ({ params }) => {
@@ -18,7 +23,12 @@ export const Route = createFileRoute("/hospital/$id")({
       supabase.from("doctors").select("*").eq("hospital_id", params.id).order("display_order").order("name"),
       supabase.from("hospital_staff").select("*").eq("hospital_id", params.id).order("display_order").order("name"),
     ]);
-    return { hospital, departments: d.data ?? [], doctors: dr.data ?? [], staff: s.data ?? [] };
+    return {
+      hospital,
+      departments: (d.data ?? []) as Department[],
+      doctors: (dr.data ?? []) as Doctor[],
+      staff: (s.data ?? []) as HospitalStaff[],
+    };
   },
   head: ({ loaderData }) => ({
     meta: loaderData
@@ -50,10 +60,15 @@ export const Route = createFileRoute("/hospital/$id")({
 });
 
 function HospitalPage() {
-  const { hospital, departments, doctors, staff } = Route.useLoaderData();
+  const { hospital, departments, doctors, staff } = Route.useLoaderData() as {
+    hospital: Awaited<ReturnType<typeof fetchHospitalById>> & {};
+    departments: Department[];
+    doctors: Doctor[];
+    staff: HospitalStaff[];
+  };
   const { t } = useI18n();
   const mapsUrl = `https://www.openstreetmap.org/?mlat=${hospital.lat}&mlon=${hospital.lng}#map=17/${hospital.lat}/${hospital.lng}`;
-  const deptName = (id: string | null) => departments.find((d) => d.id === id)?.name ?? null;
+  const deptName = (id: string | null) => departments.find((d: Department) => d.id === id)?.name ?? null;
 
   return (
     <div>
@@ -128,7 +143,7 @@ function HospitalPage() {
               <div className="rounded-2xl border border-border bg-card p-6 shadow-soft">
                 <h2 className="font-semibold text-lg flex items-center gap-2"><Building2 className="h-5 w-5 text-primary" /> {t("departments")}</h2>
                 <div className="mt-4 grid sm:grid-cols-2 gap-3">
-                  {departments.map((d) => (
+                  {departments.map((d: Department) => (
                     <div key={d.id} className="rounded-xl border border-border p-4">
                       <div className="font-semibold">{d.name}</div>
                       {d.head_doctor && <div className="mt-1 text-sm text-muted-foreground">{t("head_doctor")}: {d.head_doctor}</div>}
@@ -144,13 +159,13 @@ function HospitalPage() {
               <div className="rounded-2xl border border-border bg-card p-6 shadow-soft">
                 <h2 className="font-semibold text-lg flex items-center gap-2"><Stethoscope className="h-5 w-5 text-primary" /> {t("doctors")}</h2>
                 <div className="mt-4 grid sm:grid-cols-2 gap-3">
-                  {doctors.map((doc) => (
+                  {doctors.map((doc: Doctor) => (
                     <div key={doc.id} className="rounded-xl border border-border p-4 flex gap-3">
                       {doc.photo_url ? (
                         <img src={doc.photo_url} alt={doc.name} className="h-14 w-14 rounded-full object-cover flex-shrink-0 bg-muted" />
                       ) : (
                         <div className="h-14 w-14 rounded-full bg-primary/10 text-primary flex items-center justify-center flex-shrink-0 font-semibold">
-                          {doc.name.split(" ").map((n) => n[0]).slice(0, 2).join("")}
+                          {doc.name.split(" ").map((n: string) => n[0]).slice(0, 2).join("")}
                         </div>
                       )}
                       <div className="min-w-0 flex-1">
@@ -174,7 +189,7 @@ function HospitalPage() {
               <div className="rounded-2xl border border-border bg-card p-6 shadow-soft">
                 <h2 className="font-semibold text-lg flex items-center gap-2"><UsersIcon className="h-5 w-5 text-primary" /> {t("staff")}</h2>
                 <ul className="mt-3 divide-y divide-border">
-                  {staff.map((s) => (
+                  {staff.map((s: HospitalStaff) => (
                     <li key={s.id} className="py-3 flex flex-wrap items-center justify-between gap-3">
                       <div>
                         <div className="font-medium">{s.name}</div>

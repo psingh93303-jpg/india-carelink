@@ -1,6 +1,6 @@
 import { createFileRoute, Link, Outlet, redirect, useRouterState } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { LayoutDashboard, Building2, MessageSquare, Users, LogOut, Activity, ArrowLeft, Settings, FlaskConical, Link2 } from "lucide-react";
+import { LayoutDashboard, Building2, MessageSquare, Users, LogOut, Activity, ArrowLeft, Settings, FlaskConical, Link2, FileText, ShieldCheck } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { cn } from "@/lib/utils";
@@ -16,7 +16,7 @@ export const Route = createFileRoute("/admin")({
       .from("user_roles")
       .select("role")
       .eq("user_id", session.user.id);
-    const allowed = ["admin", "manager", "hospital_manager", "financial_manager"];
+    const allowed = ["admin", "manager", "hospital_manager", "financial_manager", "human_resource_manager"];
     if (!roles?.some((r) => allowed.includes(r.role))) {
       throw redirect({ to: "/admin/forbidden" });
     }
@@ -31,6 +31,8 @@ const NAV: NavItem[] = [
   { to: "/admin/hospitals", label: "Hospitals", icon: Building2, show: (a) => a.canEditHospital || a.isStaff },
   { to: "/admin/labs", label: "Pathology Labs", icon: FlaskConical, show: (a) => a.canEditHospital || a.isStaff },
   { to: "/admin/reviews", label: "Reviews", icon: MessageSquare, show: (a) => a.canEditHospital || a.isAdmin },
+  { to: "/admin/verifications", label: "Verification", icon: ShieldCheck, show: (a) => a.isAdmin || a.roles.includes("manager") },
+  { to: "/admin/pages", label: "Manage Pages", icon: FileText, show: (a) => a.isAdmin || a.roles.includes("manager") },
   { to: "/admin/links", label: "Trusted Links", icon: Link2, show: (a) => a.isAdmin },
   { to: "/admin/users", label: "Users", icon: Users, show: (a) => a.canManageUsers },
   { to: "/admin/site", label: "Site Settings", icon: Settings, show: (a) => a.isAdmin },

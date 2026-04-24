@@ -14,6 +14,48 @@ export type Database = {
   }
   public: {
     Tables: {
+      cms_pages: {
+        Row: {
+          content: Json
+          created_at: string
+          created_by: string | null
+          id: string
+          published_at: string | null
+          role_access: Database["public"]["Enums"]["app_role"][]
+          slug: string
+          status: string
+          title: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          content?: Json
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          published_at?: string | null
+          role_access?: Database["public"]["Enums"]["app_role"][]
+          slug: string
+          status?: string
+          title: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          content?: Json
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          published_at?: string | null
+          role_access?: Database["public"]["Enums"]["app_role"][]
+          slug?: string
+          status?: string
+          title?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
       departments: {
         Row: {
           created_at: string
@@ -536,6 +578,54 @@ export type Database = {
         }
         Relationships: []
       }
+      verification_requests: {
+        Row: {
+          basic_info: string
+          created_at: string
+          document_paths: string[]
+          entity_id: string | null
+          entity_name: string
+          entity_type: string
+          id: string
+          reviewed_at: string | null
+          reviewer_id: string | null
+          reviewer_notes: string
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          basic_info?: string
+          created_at?: string
+          document_paths?: string[]
+          entity_id?: string | null
+          entity_name: string
+          entity_type: string
+          id?: string
+          reviewed_at?: string | null
+          reviewer_id?: string | null
+          reviewer_notes?: string
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          basic_info?: string
+          created_at?: string
+          document_paths?: string[]
+          entity_id?: string | null
+          entity_name?: string
+          entity_type?: string
+          id?: string
+          reviewed_at?: string | null
+          reviewer_id?: string | null
+          reviewer_notes?: string
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       version_history: {
         Row: {
           created_at: string
@@ -582,6 +672,13 @@ export type Database = {
         }[]
       }
       can_edit_hospital: { Args: { _user_id: string }; Returns: boolean }
+      can_view_cms_page: {
+        Args: {
+          _roles: Database["public"]["Enums"]["app_role"][]
+          _status: string
+        }
+        Returns: boolean
+      }
       get_reviewer_names: {
         Args: { _user_ids: string[] }
         Returns: {

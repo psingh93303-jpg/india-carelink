@@ -174,6 +174,38 @@
     z-index: 0;
     border-radius: var(--radius);
   }
+
+  .prose-editor p,
+  .prose-render p {
+    margin-block: 0.75rem;
+    line-height: 1.75;
+  }
+
+  .prose-editor ul,
+  .prose-render ul {
+    list-style: disc;
+    padding-inline-start: 1.5rem;
+  }
+
+  .prose-editor ol,
+  .prose-render ol {
+    list-style: decimal;
+    padding-inline-start: 1.5rem;
+  }
+
+  .prose-editor blockquote,
+  .prose-render blockquote {
+    border-inline-start: 3px solid var(--color-primary);
+    color: var(--color-muted-foreground);
+    padding-inline-start: 1rem;
+  }
+
+  .prose-render h2,
+  .prose-render h3 {
+    color: var(--color-foreground);
+    font-weight: 700;
+    margin-block: 1.25rem 0.5rem;
+  }
 }
 
 @utility bg-gradient-hero {

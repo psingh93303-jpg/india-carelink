@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Save, Sparkles, Globe, Phone, FileText, Link2 } from "lucide-react";
 import { toast } from "sonner";
@@ -73,6 +73,9 @@ function AdminSitePage() {
         </div>
         <Button onClick={save} disabled={saving} variant="hero">
           <Save className="h-4 w-4" /> {saving ? "Saving…" : "Save changes"}
+        </Button>
+        <Button asChild variant="outline">
+          <Link to="/admin/pages"><FileText className="h-4 w-4" /> Manage Pages</Link>
         </Button>
       </div>
 
