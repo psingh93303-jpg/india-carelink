@@ -8,6 +8,11 @@ import { MapView } from "@/components/MapView";
 import { HospitalReviews } from "@/components/HospitalReviews";
 import { VerifiedBadge } from "@/components/VerifiedBadge";
 import { supabase } from "@/integrations/supabase/client";
+import type { Tables } from "@/integrations/supabase/types";
+
+type Department = Tables<"departments">;
+type Doctor = Tables<"doctors">;
+type HospitalStaff = Tables<"hospital_staff">;
 
 export const Route = createFileRoute("/hospital/$id")({
   loader: async ({ params }) => {
@@ -18,7 +23,12 @@ export const Route = createFileRoute("/hospital/$id")({
       supabase.from("doctors").select("*").eq("hospital_id", params.id).order("display_order").order("name"),
       supabase.from("hospital_staff").select("*").eq("hospital_id", params.id).order("display_order").order("name"),
     ]);
-    return { hospital, departments: d.data ?? [], doctors: dr.data ?? [], staff: s.data ?? [] };
+    return {
+      hospital,
+      departments: (d.data ?? []) as Department[],
+      doctors: (dr.data ?? []) as Doctor[],
+      staff: (s.data ?? []) as HospitalStaff[],
+    };
   },
   head: ({ loaderData }) => ({
     meta: loaderData
