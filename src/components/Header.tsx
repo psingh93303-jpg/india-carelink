@@ -1,9 +1,11 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { Activity, Menu, Globe, Siren, LogIn, LogOut, Shield, User as UserIcon } from "lucide-react";
 import { useState } from "react";
+import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { useI18n } from "@/lib/i18n";
 import { getRoleDashboardPath, useAuth } from "@/lib/auth";
+import { supabase } from "@/integrations/supabase/client";
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
@@ -14,14 +16,23 @@ export function Header() {
   const { location } = useRouterState();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [cmsLinks, setCmsLinks] = useState<{ slug: string; title: string }[]>([]);
 
-  if (typeof window !== "undefined") {
-    window.addEventListener(
-      "scroll",
-      () => setScrolled(window.scrollY > 8),
-      { passive: true, once: false },
-    );
-  }
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  useEffect(() => {
+    (supabase as any)
+      .from("cms_pages")
+      .select("slug,title")
+      .eq("status", "published")
+      .order("title")
+      .then(({ data }: { data: { slug: string; title: string }[] | null }) => setCmsLinks(data ?? []));
+  }, [user?.id, roles.join(",")]);
 
   const links = [
     { to: "/", label: t("nav_home") },
@@ -68,6 +79,11 @@ export function Header() {
               </Link>
             );
           })}
+          {cmsLinks.slice(0, 3).map((l) => (
+            <Link key={l.slug} to="/pages/$slug" params={{ slug: l.slug }} className="px-3 py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap text-muted-foreground hover:text-foreground hover:bg-secondary/60">
+              {l.title}
+            </Link>
+          ))}
         </nav>
 
         {/* Right: language + emergency + auth + hamburger */}
@@ -141,6 +157,11 @@ export function Header() {
                     className="rounded-lg px-3 py-3 text-base font-medium hover:bg-secondary"
                   >
                     {l.label}
+                  </Link>
+                ))}
+                {cmsLinks.map((l) => (
+                  <Link key={l.slug} to="/pages/$slug" params={{ slug: l.slug }} onClick={() => setOpen(false)} className="rounded-lg px-3 py-3 text-base font-medium hover:bg-secondary">
+                    {l.title}
                   </Link>
                 ))}
                 <button
