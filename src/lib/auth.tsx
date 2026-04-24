@@ -2,9 +2,9 @@ import { createContext, useContext, useEffect, useState, type ReactNode } from "
 import type { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 
-export type AppRole = "admin" | "manager" | "hospital_manager" | "financial_manager" | "user";
+export type AppRole = "admin" | "manager" | "hospital_manager" | "financial_manager" | "human_resource_manager" | "user";
 
-const STAFF_ROLES: AppRole[] = ["admin", "manager", "hospital_manager", "financial_manager"];
+const STAFF_ROLES: AppRole[] = ["admin", "manager", "hospital_manager", "financial_manager", "human_resource_manager"];
 const HOSPITAL_EDIT_ROLES: AppRole[] = ["admin", "manager", "hospital_manager"];
 
 type SignUpExtras = { displayName: string; username?: string; phone?: string };
@@ -158,5 +158,6 @@ export const ROLE_LABELS: Record<AppRole, string> = {
   manager: "Manager",
   hospital_manager: "Hospital Manager",
   financial_manager: "Financial Manager",
+  human_resource_manager: "Human Resource Manager",
   user: "User",
 };
