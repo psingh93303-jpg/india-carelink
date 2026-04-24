@@ -31,6 +31,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as PagesSlugRouteImport } from './routes/pages.$slug'
 import { Route as HospitalIdRouteImport } from './routes/hospital.$id'
+import { Route as AdminVerificationsRouteImport } from './routes/admin.verifications'
 import { Route as AdminUsersRouteImport } from './routes/admin.users'
 import { Route as AdminSiteRouteImport } from './routes/admin.site'
 import { Route as AdminReviewsRouteImport } from './routes/admin.reviews'
@@ -151,6 +152,11 @@ const HospitalIdRoute = HospitalIdRouteImport.update({
   path: '/hospital/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminVerificationsRoute = AdminVerificationsRouteImport.update({
+  id: '/verifications',
+  path: '/verifications',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminUsersRoute = AdminUsersRouteImport.update({
   id: '/users',
   path: '/users',
@@ -225,6 +231,7 @@ export interface FileRoutesByFullPath {
   '/admin/reviews': typeof AdminReviewsRoute
   '/admin/site': typeof AdminSiteRoute
   '/admin/users': typeof AdminUsersRoute
+  '/admin/verifications': typeof AdminVerificationsRoute
   '/hospital/$id': typeof HospitalIdRoute
   '/pages/$slug': typeof PagesSlugRoute
   '/admin/': typeof AdminIndexRoute
@@ -257,6 +264,7 @@ export interface FileRoutesByTo {
   '/admin/reviews': typeof AdminReviewsRoute
   '/admin/site': typeof AdminSiteRoute
   '/admin/users': typeof AdminUsersRoute
+  '/admin/verifications': typeof AdminVerificationsRoute
   '/hospital/$id': typeof HospitalIdRoute
   '/pages/$slug': typeof PagesSlugRoute
   '/admin': typeof AdminIndexRoute
@@ -291,6 +299,7 @@ export interface FileRoutesById {
   '/admin/reviews': typeof AdminReviewsRoute
   '/admin/site': typeof AdminSiteRoute
   '/admin/users': typeof AdminUsersRoute
+  '/admin/verifications': typeof AdminVerificationsRoute
   '/hospital/$id': typeof HospitalIdRoute
   '/pages/$slug': typeof PagesSlugRoute
   '/admin/': typeof AdminIndexRoute
@@ -326,6 +335,7 @@ export interface FileRouteTypes {
     | '/admin/reviews'
     | '/admin/site'
     | '/admin/users'
+    | '/admin/verifications'
     | '/hospital/$id'
     | '/pages/$slug'
     | '/admin/'
@@ -358,6 +368,7 @@ export interface FileRouteTypes {
     | '/admin/reviews'
     | '/admin/site'
     | '/admin/users'
+    | '/admin/verifications'
     | '/hospital/$id'
     | '/pages/$slug'
     | '/admin'
@@ -391,6 +402,7 @@ export interface FileRouteTypes {
     | '/admin/reviews'
     | '/admin/site'
     | '/admin/users'
+    | '/admin/verifications'
     | '/hospital/$id'
     | '/pages/$slug'
     | '/admin/'
@@ -577,6 +589,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HospitalIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/verifications': {
+      id: '/admin/verifications'
+      path: '/verifications'
+      fullPath: '/admin/verifications'
+      preLoaderRoute: typeof AdminVerificationsRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/users': {
       id: '/admin/users'
       path: '/users'
@@ -652,6 +671,7 @@ interface AdminRouteChildren {
   AdminReviewsRoute: typeof AdminReviewsRoute
   AdminSiteRoute: typeof AdminSiteRoute
   AdminUsersRoute: typeof AdminUsersRoute
+  AdminVerificationsRoute: typeof AdminVerificationsRoute
   AdminIndexRoute: typeof AdminIndexRoute
   AdminCmsHospitalIdRoute: typeof AdminCmsHospitalIdRoute
 }
@@ -665,6 +685,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminReviewsRoute: AdminReviewsRoute,
   AdminSiteRoute: AdminSiteRoute,
   AdminUsersRoute: AdminUsersRoute,
+  AdminVerificationsRoute: AdminVerificationsRoute,
   AdminIndexRoute: AdminIndexRoute,
   AdminCmsHospitalIdRoute: AdminCmsHospitalIdRoute,
 }
