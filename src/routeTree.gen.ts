@@ -15,6 +15,8 @@ import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as ManagerDashboardRouteImport } from './routes/manager-dashboard'
 import { Route as LabsRouteImport } from './routes/labs'
+import { Route as HrDashboardRouteImport } from './routes/hr-dashboard'
+import { Route as HospitalDashboardRouteImport } from './routes/hospital-dashboard'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as FinanceDashboardRouteImport } from './routes/finance-dashboard'
 import { Route as EmergencyRouteImport } from './routes/emergency'
@@ -64,6 +66,16 @@ const ManagerDashboardRoute = ManagerDashboardRouteImport.update({
 const LabsRoute = LabsRouteImport.update({
   id: '/labs',
   path: '/labs',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HrDashboardRoute = HrDashboardRouteImport.update({
+  id: '/hr-dashboard',
+  path: '/hr-dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HospitalDashboardRoute = HospitalDashboardRouteImport.update({
+  id: '/hospital-dashboard',
+  path: '/hospital-dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
@@ -178,6 +190,8 @@ export interface FileRoutesByFullPath {
   '/emergency': typeof EmergencyRoute
   '/finance-dashboard': typeof FinanceDashboardRoute
   '/forgot-password': typeof ForgotPasswordRoute
+  '/hospital-dashboard': typeof HospitalDashboardRoute
+  '/hr-dashboard': typeof HrDashboardRoute
   '/labs': typeof LabsRoute
   '/manager-dashboard': typeof ManagerDashboardRoute
   '/profile': typeof ProfileRoute
@@ -205,6 +219,8 @@ export interface FileRoutesByTo {
   '/emergency': typeof EmergencyRoute
   '/finance-dashboard': typeof FinanceDashboardRoute
   '/forgot-password': typeof ForgotPasswordRoute
+  '/hospital-dashboard': typeof HospitalDashboardRoute
+  '/hr-dashboard': typeof HrDashboardRoute
   '/labs': typeof LabsRoute
   '/manager-dashboard': typeof ManagerDashboardRoute
   '/profile': typeof ProfileRoute
@@ -234,6 +250,8 @@ export interface FileRoutesById {
   '/emergency': typeof EmergencyRoute
   '/finance-dashboard': typeof FinanceDashboardRoute
   '/forgot-password': typeof ForgotPasswordRoute
+  '/hospital-dashboard': typeof HospitalDashboardRoute
+  '/hr-dashboard': typeof HrDashboardRoute
   '/labs': typeof LabsRoute
   '/manager-dashboard': typeof ManagerDashboardRoute
   '/profile': typeof ProfileRoute
@@ -264,6 +282,8 @@ export interface FileRouteTypes {
     | '/emergency'
     | '/finance-dashboard'
     | '/forgot-password'
+    | '/hospital-dashboard'
+    | '/hr-dashboard'
     | '/labs'
     | '/manager-dashboard'
     | '/profile'
@@ -291,6 +311,8 @@ export interface FileRouteTypes {
     | '/emergency'
     | '/finance-dashboard'
     | '/forgot-password'
+    | '/hospital-dashboard'
+    | '/hr-dashboard'
     | '/labs'
     | '/manager-dashboard'
     | '/profile'
@@ -319,6 +341,8 @@ export interface FileRouteTypes {
     | '/emergency'
     | '/finance-dashboard'
     | '/forgot-password'
+    | '/hospital-dashboard'
+    | '/hr-dashboard'
     | '/labs'
     | '/manager-dashboard'
     | '/profile'
@@ -348,6 +372,8 @@ export interface RootRouteChildren {
   EmergencyRoute: typeof EmergencyRoute
   FinanceDashboardRoute: typeof FinanceDashboardRoute
   ForgotPasswordRoute: typeof ForgotPasswordRoute
+  HospitalDashboardRoute: typeof HospitalDashboardRoute
+  HrDashboardRoute: typeof HrDashboardRoute
   LabsRoute: typeof LabsRoute
   ManagerDashboardRoute: typeof ManagerDashboardRoute
   ProfileRoute: typeof ProfileRoute
@@ -399,6 +425,20 @@ declare module '@tanstack/react-router' {
       path: '/labs'
       fullPath: '/labs'
       preLoaderRoute: typeof LabsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/hr-dashboard': {
+      id: '/hr-dashboard'
+      path: '/hr-dashboard'
+      fullPath: '/hr-dashboard'
+      preLoaderRoute: typeof HrDashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/hospital-dashboard': {
+      id: '/hospital-dashboard'
+      path: '/hospital-dashboard'
+      fullPath: '/hospital-dashboard'
+      preLoaderRoute: typeof HospitalDashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/forgot-password': {
@@ -581,6 +621,8 @@ const rootRouteChildren: RootRouteChildren = {
   EmergencyRoute: EmergencyRoute,
   FinanceDashboardRoute: FinanceDashboardRoute,
   ForgotPasswordRoute: ForgotPasswordRoute,
+  HospitalDashboardRoute: HospitalDashboardRoute,
+  HrDashboardRoute: HrDashboardRoute,
   LabsRoute: LabsRoute,
   ManagerDashboardRoute: ManagerDashboardRoute,
   ProfileRoute: ProfileRoute,
