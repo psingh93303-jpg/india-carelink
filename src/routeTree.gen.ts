@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as VerificationRequestRouteImport } from './routes/verification-request'
 import { Route as SymptomSearchRouteImport } from './routes/symptom-search'
 import { Route as SearchRouteImport } from './routes/search'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
@@ -28,6 +29,7 @@ import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
+import { Route as PagesSlugRouteImport } from './routes/pages.$slug'
 import { Route as HospitalIdRouteImport } from './routes/hospital.$id'
 import { Route as AdminUsersRouteImport } from './routes/admin.users'
 import { Route as AdminSiteRouteImport } from './routes/admin.site'
@@ -39,6 +41,11 @@ import { Route as AdminHospitalsRouteImport } from './routes/admin.hospitals'
 import { Route as AdminForbiddenRouteImport } from './routes/admin.forbidden'
 import { Route as AdminCmsHospitalIdRouteImport } from './routes/admin.cms.$hospitalId'
 
+const VerificationRequestRoute = VerificationRequestRouteImport.update({
+  id: '/verification-request',
+  path: '/verification-request',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SymptomSearchRoute = SymptomSearchRouteImport.update({
   id: '/symptom-search',
   path: '/symptom-search',
@@ -134,6 +141,11 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AdminRoute,
 } as any)
+const PagesSlugRoute = PagesSlugRouteImport.update({
+  id: '/pages/$slug',
+  path: '/pages/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const HospitalIdRoute = HospitalIdRouteImport.update({
   id: '/hospital/$id',
   path: '/hospital/$id',
@@ -204,6 +216,7 @@ export interface FileRoutesByFullPath {
   '/reset-password': typeof ResetPasswordRoute
   '/search': typeof SearchRoute
   '/symptom-search': typeof SymptomSearchRoute
+  '/verification-request': typeof VerificationRequestRoute
   '/admin/forbidden': typeof AdminForbiddenRoute
   '/admin/hospitals': typeof AdminHospitalsRoute
   '/admin/labs': typeof AdminLabsRoute
@@ -213,6 +226,7 @@ export interface FileRoutesByFullPath {
   '/admin/site': typeof AdminSiteRoute
   '/admin/users': typeof AdminUsersRoute
   '/hospital/$id': typeof HospitalIdRoute
+  '/pages/$slug': typeof PagesSlugRoute
   '/admin/': typeof AdminIndexRoute
   '/admin/cms/$hospitalId': typeof AdminCmsHospitalIdRoute
 }
@@ -234,6 +248,7 @@ export interface FileRoutesByTo {
   '/reset-password': typeof ResetPasswordRoute
   '/search': typeof SearchRoute
   '/symptom-search': typeof SymptomSearchRoute
+  '/verification-request': typeof VerificationRequestRoute
   '/admin/forbidden': typeof AdminForbiddenRoute
   '/admin/hospitals': typeof AdminHospitalsRoute
   '/admin/labs': typeof AdminLabsRoute
@@ -243,6 +258,7 @@ export interface FileRoutesByTo {
   '/admin/site': typeof AdminSiteRoute
   '/admin/users': typeof AdminUsersRoute
   '/hospital/$id': typeof HospitalIdRoute
+  '/pages/$slug': typeof PagesSlugRoute
   '/admin': typeof AdminIndexRoute
   '/admin/cms/$hospitalId': typeof AdminCmsHospitalIdRoute
 }
@@ -266,6 +282,7 @@ export interface FileRoutesById {
   '/reset-password': typeof ResetPasswordRoute
   '/search': typeof SearchRoute
   '/symptom-search': typeof SymptomSearchRoute
+  '/verification-request': typeof VerificationRequestRoute
   '/admin/forbidden': typeof AdminForbiddenRoute
   '/admin/hospitals': typeof AdminHospitalsRoute
   '/admin/labs': typeof AdminLabsRoute
@@ -275,6 +292,7 @@ export interface FileRoutesById {
   '/admin/site': typeof AdminSiteRoute
   '/admin/users': typeof AdminUsersRoute
   '/hospital/$id': typeof HospitalIdRoute
+  '/pages/$slug': typeof PagesSlugRoute
   '/admin/': typeof AdminIndexRoute
   '/admin/cms/$hospitalId': typeof AdminCmsHospitalIdRoute
 }
@@ -299,6 +317,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/search'
     | '/symptom-search'
+    | '/verification-request'
     | '/admin/forbidden'
     | '/admin/hospitals'
     | '/admin/labs'
@@ -308,6 +327,7 @@ export interface FileRouteTypes {
     | '/admin/site'
     | '/admin/users'
     | '/hospital/$id'
+    | '/pages/$slug'
     | '/admin/'
     | '/admin/cms/$hospitalId'
   fileRoutesByTo: FileRoutesByTo
@@ -329,6 +349,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/search'
     | '/symptom-search'
+    | '/verification-request'
     | '/admin/forbidden'
     | '/admin/hospitals'
     | '/admin/labs'
@@ -338,6 +359,7 @@ export interface FileRouteTypes {
     | '/admin/site'
     | '/admin/users'
     | '/hospital/$id'
+    | '/pages/$slug'
     | '/admin'
     | '/admin/cms/$hospitalId'
   id:
@@ -360,6 +382,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/search'
     | '/symptom-search'
+    | '/verification-request'
     | '/admin/forbidden'
     | '/admin/hospitals'
     | '/admin/labs'
@@ -369,6 +392,7 @@ export interface FileRouteTypes {
     | '/admin/site'
     | '/admin/users'
     | '/hospital/$id'
+    | '/pages/$slug'
     | '/admin/'
     | '/admin/cms/$hospitalId'
   fileRoutesById: FileRoutesById
@@ -392,11 +416,20 @@ export interface RootRouteChildren {
   ResetPasswordRoute: typeof ResetPasswordRoute
   SearchRoute: typeof SearchRoute
   SymptomSearchRoute: typeof SymptomSearchRoute
+  VerificationRequestRoute: typeof VerificationRequestRoute
   HospitalIdRoute: typeof HospitalIdRoute
+  PagesSlugRoute: typeof PagesSlugRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/verification-request': {
+      id: '/verification-request'
+      path: '/verification-request'
+      fullPath: '/verification-request'
+      preLoaderRoute: typeof VerificationRequestRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/symptom-search': {
       id: '/symptom-search'
       path: '/symptom-search'
@@ -530,6 +563,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminIndexRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/pages/$slug': {
+      id: '/pages/$slug'
+      path: '/pages/$slug'
+      fullPath: '/pages/$slug'
+      preLoaderRoute: typeof PagesSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/hospital/$id': {
       id: '/hospital/$id'
       path: '/hospital/$id'
@@ -650,8 +690,19 @@ const rootRouteChildren: RootRouteChildren = {
   ResetPasswordRoute: ResetPasswordRoute,
   SearchRoute: SearchRoute,
   SymptomSearchRoute: SymptomSearchRoute,
+  VerificationRequestRoute: VerificationRequestRoute,
   HospitalIdRoute: HospitalIdRoute,
+  PagesSlugRoute: PagesSlugRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { createStart } from '@tanstack/react-start'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+  }
+}
