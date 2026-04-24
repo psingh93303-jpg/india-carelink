@@ -5,7 +5,7 @@ import { Activity, Loader2, MailCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useAuth } from "@/lib/auth";
+import { getRoleDashboardPath, type AppRole, useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
@@ -16,7 +16,9 @@ export const Route = createFileRoute("/auth")({
   beforeLoad: async ({ search }) => {
     const { data } = await supabase.auth.getSession();
     if (data.session) {
-      throw redirect({ to: search.redirect ?? "/" });
+      const { data: roleRows } = await supabase.from("user_roles").select("role").eq("user_id", data.session.user.id);
+      const roles = ((roleRows ?? []).map((row) => row.role)) as AppRole[];
+      throw redirect({ to: search.redirect ?? getRoleDashboardPath(roles) });
     }
   },
   head: () => ({
@@ -34,6 +36,13 @@ const nameSchema = z.string().trim().min(1).max(80);
 const usernameSchema = z.string().trim().min(3).max(30).regex(/^[a-zA-Z0-9_.-]+$/, "Only letters, numbers, _ . -");
 const phoneSchema = z.string().trim().regex(/^[+0-9 ()-]{7,20}$/, "Enter a valid phone number");
 const otpSchema = z.string().trim().regex(/^\d{6}$/, "Enter the 6-digit code");
+
+async function getSignedInDashboardPath() {
+  const { data: userData } = await supabase.auth.getUser();
+  if (!userData.user) return "/profile";
+  const { data } = await supabase.from("user_roles").select("role").eq("user_id", userData.user.id);
+  return getRoleDashboardPath(((data ?? []).map((row) => row.role)) as AppRole[]);
+}
 
 type Mode = "signin" | "signup" | "verify";
 
@@ -60,7 +69,7 @@ function AuthPage() {
         const { error } = await verifyEmailOtp(email, otpParsed.data);
         if (error) return toast.error(error);
         toast.success("Email verified! You're signed in.");
-        navigate({ to: search.redirect ?? "/" });
+        navigate({ to: search.redirect ?? (await getSignedInDashboardPath()) });
         return;
       }
 
@@ -84,12 +93,12 @@ function AuthPage() {
         });
         if (error) return toast.error(error);
         toast.success("Account created! You're signed in.");
-        navigate({ to: search.redirect ?? "/" });
+        navigate({ to: search.redirect ?? (await getSignedInDashboardPath()) });
       } else {
         const { error } = await signIn(emailParsed.data, pwParsed.data);
         if (error) return toast.error(error);
         toast.success("Welcome back!");
-        navigate({ to: search.redirect ?? "/" });
+        navigate({ to: search.redirect ?? (await getSignedInDashboardPath()) });
       }
     } finally {
       setLoading(false);
