@@ -7,6 +7,19 @@ export type AppRole = "admin" | "manager" | "hospital_manager" | "financial_mana
 const STAFF_ROLES: AppRole[] = ["admin", "manager", "hospital_manager", "financial_manager", "human_resource_manager"];
 const HOSPITAL_EDIT_ROLES: AppRole[] = ["admin", "manager", "hospital_manager"];
 
+export const ROLE_DASHBOARDS: Partial<Record<AppRole, string>> = {
+  admin: "/admin-dashboard",
+  manager: "/manager-dashboard",
+  financial_manager: "/finance-dashboard",
+  hospital_manager: "/hospital-dashboard",
+  human_resource_manager: "/hr-dashboard",
+};
+
+export function getRoleDashboardPath(userRoles: AppRole[]) {
+  const priority: AppRole[] = ["admin", "manager", "financial_manager", "hospital_manager", "human_resource_manager"];
+  return ROLE_DASHBOARDS[priority.find((role) => userRoles.includes(role)) ?? "user"] ?? "/profile";
+}
+
 type SignUpExtras = { displayName: string; username?: string; phone?: string };
 
 type Ctx = {
