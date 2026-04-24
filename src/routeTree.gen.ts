@@ -13,12 +13,15 @@ import { Route as SymptomSearchRouteImport } from './routes/symptom-search'
 import { Route as SearchRouteImport } from './routes/search'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as ProfileRouteImport } from './routes/profile'
+import { Route as ManagerDashboardRouteImport } from './routes/manager-dashboard'
 import { Route as LabsRouteImport } from './routes/labs'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
+import { Route as FinanceDashboardRouteImport } from './routes/finance-dashboard'
 import { Route as EmergencyRouteImport } from './routes/emergency'
 import { Route as DisclaimerRouteImport } from './routes/disclaimer'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AdminDashboardRouteImport } from './routes/admin-dashboard'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
@@ -53,6 +56,11 @@ const ProfileRoute = ProfileRouteImport.update({
   path: '/profile',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ManagerDashboardRoute = ManagerDashboardRouteImport.update({
+  id: '/manager-dashboard',
+  path: '/manager-dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LabsRoute = LabsRouteImport.update({
   id: '/labs',
   path: '/labs',
@@ -61,6 +69,11 @@ const LabsRoute = LabsRouteImport.update({
 const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
   id: '/forgot-password',
   path: '/forgot-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FinanceDashboardRoute = FinanceDashboardRouteImport.update({
+  id: '/finance-dashboard',
+  path: '/finance-dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
 const EmergencyRoute = EmergencyRouteImport.update({
@@ -81,6 +94,11 @@ const ContactRoute = ContactRouteImport.update({
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminDashboardRoute = AdminDashboardRouteImport.update({
+  id: '/admin-dashboard',
+  path: '/admin-dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminRoute = AdminRouteImport.update({
@@ -153,12 +171,15 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/admin': typeof AdminRouteWithChildren
+  '/admin-dashboard': typeof AdminDashboardRoute
   '/auth': typeof AuthRoute
   '/contact': typeof ContactRoute
   '/disclaimer': typeof DisclaimerRoute
   '/emergency': typeof EmergencyRoute
+  '/finance-dashboard': typeof FinanceDashboardRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/labs': typeof LabsRoute
+  '/manager-dashboard': typeof ManagerDashboardRoute
   '/profile': typeof ProfileRoute
   '/reset-password': typeof ResetPasswordRoute
   '/search': typeof SearchRoute
@@ -177,12 +198,15 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/admin-dashboard': typeof AdminDashboardRoute
   '/auth': typeof AuthRoute
   '/contact': typeof ContactRoute
   '/disclaimer': typeof DisclaimerRoute
   '/emergency': typeof EmergencyRoute
+  '/finance-dashboard': typeof FinanceDashboardRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/labs': typeof LabsRoute
+  '/manager-dashboard': typeof ManagerDashboardRoute
   '/profile': typeof ProfileRoute
   '/reset-password': typeof ResetPasswordRoute
   '/search': typeof SearchRoute
@@ -203,12 +227,15 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/admin': typeof AdminRouteWithChildren
+  '/admin-dashboard': typeof AdminDashboardRoute
   '/auth': typeof AuthRoute
   '/contact': typeof ContactRoute
   '/disclaimer': typeof DisclaimerRoute
   '/emergency': typeof EmergencyRoute
+  '/finance-dashboard': typeof FinanceDashboardRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/labs': typeof LabsRoute
+  '/manager-dashboard': typeof ManagerDashboardRoute
   '/profile': typeof ProfileRoute
   '/reset-password': typeof ResetPasswordRoute
   '/search': typeof SearchRoute
@@ -230,12 +257,15 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/admin'
+    | '/admin-dashboard'
     | '/auth'
     | '/contact'
     | '/disclaimer'
     | '/emergency'
+    | '/finance-dashboard'
     | '/forgot-password'
     | '/labs'
+    | '/manager-dashboard'
     | '/profile'
     | '/reset-password'
     | '/search'
@@ -254,12 +284,15 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/about'
+    | '/admin-dashboard'
     | '/auth'
     | '/contact'
     | '/disclaimer'
     | '/emergency'
+    | '/finance-dashboard'
     | '/forgot-password'
     | '/labs'
+    | '/manager-dashboard'
     | '/profile'
     | '/reset-password'
     | '/search'
@@ -279,12 +312,15 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/admin'
+    | '/admin-dashboard'
     | '/auth'
     | '/contact'
     | '/disclaimer'
     | '/emergency'
+    | '/finance-dashboard'
     | '/forgot-password'
     | '/labs'
+    | '/manager-dashboard'
     | '/profile'
     | '/reset-password'
     | '/search'
@@ -305,12 +341,15 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
   AdminRoute: typeof AdminRouteWithChildren
+  AdminDashboardRoute: typeof AdminDashboardRoute
   AuthRoute: typeof AuthRoute
   ContactRoute: typeof ContactRoute
   DisclaimerRoute: typeof DisclaimerRoute
   EmergencyRoute: typeof EmergencyRoute
+  FinanceDashboardRoute: typeof FinanceDashboardRoute
   ForgotPasswordRoute: typeof ForgotPasswordRoute
   LabsRoute: typeof LabsRoute
+  ManagerDashboardRoute: typeof ManagerDashboardRoute
   ProfileRoute: typeof ProfileRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   SearchRoute: typeof SearchRoute
@@ -348,6 +387,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProfileRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/manager-dashboard': {
+      id: '/manager-dashboard'
+      path: '/manager-dashboard'
+      fullPath: '/manager-dashboard'
+      preLoaderRoute: typeof ManagerDashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/labs': {
       id: '/labs'
       path: '/labs'
@@ -360,6 +406,13 @@ declare module '@tanstack/react-router' {
       path: '/forgot-password'
       fullPath: '/forgot-password'
       preLoaderRoute: typeof ForgotPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/finance-dashboard': {
+      id: '/finance-dashboard'
+      path: '/finance-dashboard'
+      fullPath: '/finance-dashboard'
+      preLoaderRoute: typeof FinanceDashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/emergency': {
@@ -388,6 +441,13 @@ declare module '@tanstack/react-router' {
       path: '/auth'
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin-dashboard': {
+      id: '/admin-dashboard'
+      path: '/admin-dashboard'
+      fullPath: '/admin-dashboard'
+      preLoaderRoute: typeof AdminDashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin': {
@@ -514,12 +574,15 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
   AdminRoute: AdminRouteWithChildren,
+  AdminDashboardRoute: AdminDashboardRoute,
   AuthRoute: AuthRoute,
   ContactRoute: ContactRoute,
   DisclaimerRoute: DisclaimerRoute,
   EmergencyRoute: EmergencyRoute,
+  FinanceDashboardRoute: FinanceDashboardRoute,
   ForgotPasswordRoute: ForgotPasswordRoute,
   LabsRoute: LabsRoute,
+  ManagerDashboardRoute: ManagerDashboardRoute,
   ProfileRoute: ProfileRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   SearchRoute: SearchRoute,
