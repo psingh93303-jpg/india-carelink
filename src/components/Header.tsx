@@ -120,6 +120,9 @@ export function Header() {
                 <DropdownMenuItem asChild>
                   <Link to="/profile"><UserIcon className="h-4 w-4" /> My profile</Link>
                 </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/verification-request"><Shield className="h-4 w-4" /> Request verification</Link>
+                </DropdownMenuItem>
                 {isStaff && (
                   <DropdownMenuItem asChild>
                     <Link to={getRoleDashboardPath(roles)}><Shield className="h-4 w-4" /> Dashboard</Link>
