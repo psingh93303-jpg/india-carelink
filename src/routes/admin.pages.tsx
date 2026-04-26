@@ -141,8 +141,8 @@ function AdminPages() {
 
       <div className="grid gap-6 lg:grid-cols-[260px_1fr]">
         <aside className="space-y-3 rounded-2xl border border-border bg-card p-3 shadow-soft">
-          <Input value={query} onChange={(e) => updateFilters({ query: e.target.value })} placeholder="Search title or slug…" />
-          <Select value={statusFilter} onValueChange={(value) => updateFilters({ status: value as "all" | "draft" | "published" })}>
+          <Input value={searchInput} onChange={(e) => setSearchInput(e.target.value)} placeholder="Search title or slug…" />
+          <Select value={statusFilter} onValueChange={(value) => updateStatusFilter(value as "all" | "draft" | "published")}>
             <SelectTrigger><SelectValue /></SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All statuses</SelectItem>
@@ -151,7 +151,7 @@ function AdminPages() {
             </SelectContent>
           </Select>
           <div className="overflow-hidden rounded-xl border border-border">
-            {pages.length === 0 ? <p className="p-3 text-sm text-muted-foreground">No pages yet.</p> : visiblePages.length === 0 ? <p className="p-3 text-sm text-muted-foreground">No matching pages.</p> : visiblePages.map((page) => (
+            {loading && pages.length === 0 ? <p className="p-3 text-sm text-muted-foreground">Loading…</p> : pages.length === 0 ? <p className="p-3 text-sm text-muted-foreground">No matching pages.</p> : pages.map((page) => (
               <button key={page.id} onClick={() => setActiveId(page.id)} className="flex w-full items-center gap-2 border-b border-border px-3 py-2 text-left text-sm last:border-b-0 hover:bg-secondary">
                 <FileText className="h-4 w-4 text-primary" />
                 <span className="min-w-0 flex-1">
@@ -163,7 +163,7 @@ function AdminPages() {
             ))}
           </div>
           <div className="flex items-center justify-between gap-2 text-xs text-muted-foreground">
-            <span>{filteredPages.length} pages</span>
+            <span>{totalCount} pages</span>
             <div className="flex items-center gap-2">
               <Button variant="outline" size="sm" disabled={pageIndex <= 1} onClick={() => setPageIndex((p) => Math.max(1, p - 1))}>Prev</Button>
               <span>{pageIndex}/{pageCount}</span>
