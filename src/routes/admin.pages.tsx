@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { FileText, Plus, Save, Trash2 } from "lucide-react";
 import { z } from "zod";
 import { toast } from "sonner";
@@ -35,35 +35,53 @@ export const Route = createFileRoute("/admin/pages")({
   component: AdminPages,
 });
 
+const PAGE_SIZE = 8;
+
 function AdminPages() {
   const [pages, setPages] = useState<CmsPage[]>([]);
+  const [totalCount, setTotalCount] = useState(0);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [query, setQuery] = useState("");
+  const [searchInput, setSearchInput] = useState("");
   const [statusFilter, setStatusFilter] = useState<"all" | "draft" | "published">("all");
   const [pageIndex, setPageIndex] = useState(1);
+  const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
 
   const active = useMemo(() => pages.find((page) => page.id === activeId) ?? pages[0], [activeId, pages]);
-  const filteredPages = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    return pages.filter((page) => {
-      const matchesQuery = !q || page.title.toLowerCase().includes(q) || page.slug.toLowerCase().includes(q);
-      const matchesStatus = statusFilter === "all" || page.status === statusFilter;
-      return matchesQuery && matchesStatus;
-    });
-  }, [pages, query, statusFilter]);
-  const pageSize = 8;
-  const pageCount = Math.max(1, Math.ceil(filteredPages.length / pageSize));
-  const visiblePages = filteredPages.slice((pageIndex - 1) * pageSize, pageIndex * pageSize);
+  const pageCount = Math.max(1, Math.ceil(totalCount / PAGE_SIZE));
 
-  const load = async () => {
-    const { data, error } = await (supabase as any).from("cms_pages").select("*").order("updated_at", { ascending: false });
+  // Debounce search input → query
+  useEffect(() => {
+    const t = setTimeout(() => {
+      setQuery(searchInput);
+      setPageIndex(1);
+    }, 300);
+    return () => clearTimeout(t);
+  }, [searchInput]);
+
+  const load = useCallback(async () => {
+    setLoading(true);
+    const from = (pageIndex - 1) * PAGE_SIZE;
+    const to = from + PAGE_SIZE - 1;
+    let req = (supabase as any)
+      .from("cms_pages")
+      .select("*", { count: "exact" })
+      .order("updated_at", { ascending: false })
+      .range(from, to);
+    const q = query.trim();
+    if (q) req = req.or(`title.ilike.%${q}%,slug.ilike.%${q}%`);
+    if (statusFilter !== "all") req = req.eq("status", statusFilter);
+    const { data, error, count } = await req;
+    setLoading(false);
     if (error) return toast.error(error.message);
-    setPages((data ?? []) as CmsPage[]);
-    if (!activeId && data?.[0]) setActiveId(data[0].id);
-  };
+    const rows = (data ?? []) as CmsPage[];
+    setPages(rows);
+    setTotalCount(count ?? 0);
+    if (!rows.find((p) => p.id === activeId) && rows[0]) setActiveId(rows[0].id);
+  }, [pageIndex, query, statusFilter, activeId]);
 
-  useEffect(() => { load(); }, []);
+  useEffect(() => { load(); /* eslint-disable-next-line react-hooks/exhaustive-deps */ }, [pageIndex, query, statusFilter]);
 
   const updateActive = (patch: Partial<CmsPage>) => {
     if (!active) return;
@@ -72,14 +90,13 @@ function AdminPages() {
 
   const createPage = () => {
     const id = crypto.randomUUID();
-    const page: CmsPage = { id, title: "New Page", slug: `new-page-${pages.length + 1}`, content: {}, role_access: [], status: "draft" };
+    const page: CmsPage = { id, title: "New Page", slug: `new-page-${Date.now().toString(36)}`, content: {}, role_access: [], status: "draft" };
     setPages([page, ...pages]);
     setActiveId(id);
   };
 
-  const updateFilters = (patch: { query?: string; status?: "all" | "draft" | "published" }) => {
-    if (patch.query !== undefined) setQuery(patch.query);
-    if (patch.status !== undefined) setStatusFilter(patch.status);
+  const updateStatusFilter = (status: "all" | "draft" | "published") => {
+    setStatusFilter(status);
     setPageIndex(1);
   };
 
@@ -108,8 +125,8 @@ function AdminPages() {
     const { error } = await (supabase as any).from("cms_pages").delete().eq("id", active.id);
     if (error) return toast.error(error.message);
     toast.success("Page deleted");
-    setPages((current) => current.filter((page) => page.id !== active.id));
     setActiveId(null);
+    load();
   };
 
   return (
@@ -124,8 +141,8 @@ function AdminPages() {
 
       <div className="grid gap-6 lg:grid-cols-[260px_1fr]">
         <aside className="space-y-3 rounded-2xl border border-border bg-card p-3 shadow-soft">
-          <Input value={query} onChange={(e) => updateFilters({ query: e.target.value })} placeholder="Search title or slug…" />
-          <Select value={statusFilter} onValueChange={(value) => updateFilters({ status: value as "all" | "draft" | "published" })}>
+          <Input value={searchInput} onChange={(e) => setSearchInput(e.target.value)} placeholder="Search title or slug…" />
+          <Select value={statusFilter} onValueChange={(value) => updateStatusFilter(value as "all" | "draft" | "published")}>
             <SelectTrigger><SelectValue /></SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All statuses</SelectItem>
@@ -134,7 +151,7 @@ function AdminPages() {
             </SelectContent>
           </Select>
           <div className="overflow-hidden rounded-xl border border-border">
-            {pages.length === 0 ? <p className="p-3 text-sm text-muted-foreground">No pages yet.</p> : visiblePages.length === 0 ? <p className="p-3 text-sm text-muted-foreground">No matching pages.</p> : visiblePages.map((page) => (
+            {loading && pages.length === 0 ? <p className="p-3 text-sm text-muted-foreground">Loading…</p> : pages.length === 0 ? <p className="p-3 text-sm text-muted-foreground">No matching pages.</p> : pages.map((page) => (
               <button key={page.id} onClick={() => setActiveId(page.id)} className="flex w-full items-center gap-2 border-b border-border px-3 py-2 text-left text-sm last:border-b-0 hover:bg-secondary">
                 <FileText className="h-4 w-4 text-primary" />
                 <span className="min-w-0 flex-1">
@@ -146,7 +163,7 @@ function AdminPages() {
             ))}
           </div>
           <div className="flex items-center justify-between gap-2 text-xs text-muted-foreground">
-            <span>{filteredPages.length} pages</span>
+            <span>{totalCount} pages</span>
             <div className="flex items-center gap-2">
               <Button variant="outline" size="sm" disabled={pageIndex <= 1} onClick={() => setPageIndex((p) => Math.max(1, p - 1))}>Prev</Button>
               <span>{pageIndex}/{pageCount}</span>
